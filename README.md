@@ -75,6 +75,14 @@ of more complex tasks. The structure of the webapp for managing different tasks:
 **Docker** will also be included and configured!
 **PostgreSQL** set as the default database
 
+### What i didn't use and why?
+My first tought was to create a DRF backend and use React as frontend, tho this will
+be the cleanest way for developing it is not what i want to showcase.
+For the purpose of this course I will implement pretty much everything learned, 
+dynamicly generated pages(Jinja), API, user auth, plain vanila JS without libraries or
+frameworks, SCSS/CSS and testin. Possibly custom querries just as an experimentation
+as well.
+
 Most importantly, ***Tests***, a lot of them. Both unit and integration tests would be required!
 
 
@@ -84,7 +92,7 @@ appropriately to serve static amd media(with *Cloudinary*) files, working with p
 security and also experimenting with scalability(most likely not needed).
 
 
-### Disclamer
+## Disclamer
 As I develop the project there might be things that require change, removal or perhaps 
 new features being included. This description is not complete and most certainly won't be 
 the same on the last commit of this repository. 
