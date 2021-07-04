@@ -3,7 +3,7 @@ version: '3.9'
 services:
     web:
         build: .
-        command: python /code/manage.py runserver 0.0.0.0
+        command: python /code/manage.py runserver 0.0.0.0:8000
         volumes:
         - .:/code
         ports:
@@ -14,9 +14,9 @@ services:
     db:
         image: postgres:11
         volumes:
-            - postgres_data: /var/lib/postgresql/data/
+            - postgres_data:/var/lib/postgresql/data/
         environment:
             - "POSTGRES_HOST_AUTH_METHOD=trust"
-        # This will probably affect the db writing
-        # volumes:
-        #     postgres_data:
+            
+volumes:
+    postgres_data:

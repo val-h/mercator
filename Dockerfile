@@ -1,6 +1,7 @@
 FROM python:3.9
 
 # Set env variables
+# ENV PORT 8000
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
@@ -14,4 +15,4 @@ RUN pip install pipenv && pipenv install --system
 # Copy project
 COPY . /code
 
-CMD ["python manage.py runserver", "."]
+# CMD ["python /code/manage.py runserver", "."]
