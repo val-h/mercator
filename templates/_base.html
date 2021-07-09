@@ -15,10 +15,10 @@
             <div id="user-welcome">
                 {% if user.is_authenticated %}
                     Hello, {{ user.username }} 
-                    <a href="#">Logout</a>
+                    <a href="{% url 'users:logout' %}">Logout</a>
                 {% else %}
-                    <a href="#">Login</a>
-                    <a href="#">Register</a>
+                    <a href="{% url 'users:login' %}">Login</a>
+                    <a href="{% url 'users:register' %}">Register</a>
                 {% endif %}
             </div>
         </header>
@@ -39,6 +39,10 @@
         </nav>
 
         <main>
+            {% if message %}
+                <div id="message-popup">{{ message }}</div>
+            {% endif %}
+            
             {% block content %}{% endblock %}
         </main>
 

@@ -1,0 +1,15 @@
+{% extends '_base.html' %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+    <!-- Sameple form -->
+    <div id="login-container">
+        <h2>Log in</h2>
+        <form id="login-form" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Log in">
+        </form>
+    </div>
+{% endblock content %}
