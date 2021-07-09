@@ -1,6 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.urls import reverse
+from django.urls import reverse, resolve
+
+from .forms import CustomUserCreateForm
+from . import views
 
 
 class CustomUserTests(TestCase):
@@ -44,3 +47,12 @@ class RegisterPageTest(TestCase):
         self.assertTemplateUsed(self.register, 'registration/register.html')
         self.assertContains(self.register, 'Register')
         self.assertNotContains(self.register, 'Logout')
+
+    def test_register_form(self):
+        form = self.register.context.get('form')
+        self.assertIsInstance(form, CustomUserCreateForm)
+        self.assertContains(self.register, 'csrfmiddlewaretoken')
+
+    def test_register_view(self):
+        view = resolve('/auth/register/')
+        self.assertEqual(view.func.__name__, views.register.__name__)
