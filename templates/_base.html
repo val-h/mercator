@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}Mercator{% endblock %}</title>
+    </head>
+    <body>
+        <header>
+            <!-- LOGO -->
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">Categories</a>
+                {% if user.is_authenticated %}
+                    <a href="#">My account</a>
+                {% endif %}
+                <!-- 
+                {% if user.is_shop_owner %}
+                    <a href="#">Shop</a>
+                {% endif %}
+                 -->
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </nav>
+
+            <div id="search-bar">
+                <!-- basicly id -->
+            </div>
+        </header>
+
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer>
+            <div>
+                Made by: <strong><a href="https://github.com/val-h" target="_blank">val-h</a></strong>
+            </div>
+        </footer>
+    </body>
+</html>
