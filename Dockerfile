@@ -16,3 +16,6 @@ RUN pip install pipenv && pipenv install --system
 COPY . /code
 
 # CMD ["python /code/manage.py runserver", "."]
+
+# Run some command so the container doesn't shut down
+CMD tail -f /dev/null
