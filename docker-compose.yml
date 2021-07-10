@@ -2,6 +2,10 @@ version: '3.9'
 
 services:
     web:
+        # GitHub Actions - CI
+        # Just had to add the web name, or the docker exec 'web' doesn't work
+        # docker automatically creates mercator_web_1 image, should have paind
+        # more attention to the logs : )))
         container_name: web
         build: .
         command: python /code/manage.py runserver 0.0.0.0:8000
