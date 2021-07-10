@@ -6,10 +6,15 @@
     </head>
     <body>
         <header>
-            <!-- LOGO -->
+            <div id="mercator-logo">
+                <!-- LOGO -->
+            </div>
 
             <div id="search-bar">
-                <!-- basicly id -->
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <input type="search" placeholder="Search">
+                </form>
             </div>
 
             <div id="user-welcome">
@@ -36,6 +41,9 @@
              -->
             <a href="{% url 'pages:about' %}">About</a>
             <a href="{% url 'pages:contact' %}">Contact</a>
+
+            <!-- Cart button -->
+            <a style="font-size: 30px" href="#">🛒</a>
         </nav>
 
         <main>
@@ -47,7 +55,12 @@
         </main>
 
         <footer>
-            <div>
+            <div id="links-container">
+                <a href="{% url 'pages:privacy' %}">Privacy</a>
+                <a href="{% url 'pages:about' %}">About</a>
+                <a href="{% url 'pages:contact' %}">Contact</a>
+            </div>
+            <div id="made-by">
                 Made by: <strong><a href="https://github.com/val-h" target="_blank">val-h</a></strong>
             </div>
         </footer>

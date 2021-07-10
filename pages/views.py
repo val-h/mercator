@@ -12,3 +12,6 @@ def about(request):
 
 def contact(request):
     return render(request, 'contact.html', context={})
+
+def privacy(request):
+    return render(request, 'privacy.html')
