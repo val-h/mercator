@@ -46,4 +46,4 @@ jobs:
           pip install django pillow
       
       - name: Run tests
-        run: docker-compose exec web python manage.py test
+        run: docker exec web python manage.py test
