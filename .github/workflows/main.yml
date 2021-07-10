@@ -45,11 +45,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install django pillow
 
-      - name: Check running containers
-        run: docker ps -a
-
       - name: Run the Docker container
         run: docker-compose up -d
+
+      - name: Check running containers
+        run: docker ps -a
       
       - name: Run tests
         run: docker exec web python manage.py test
