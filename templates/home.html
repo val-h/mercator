@@ -3,14 +3,16 @@
 {% block title %}Mercator{% endblock %}
 
 {% block content %}
-    <div id="main-container">
-        <div id="personalised-container">
-            personalised products container
-        </div>
-
-        <div id="trending-container">
-            Trending products container
-        </div>
-
+<div id="main-container">
+    {% if user.is_authenticated %}
+    <div id="personalised-container">
+        personalised products container
     </div>
+    {% endif %}
+
+    <div id="trending-container">
+        Trending products container
+    </div>
+
+</div>
 {% endblock %}

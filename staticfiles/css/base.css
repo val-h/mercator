@@ -1,0 +1,125 @@
+body {
+  background-color: #f1f1f2;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  width: 100%;
+  height: 80px;
+  background-color: #bcbabe;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+header #mercator-logo {
+  width: 20%;
+}
+header #mercator-logo img {
+  max-height: 70px;
+  border-radius: 15%;
+}
+header #user-welcome {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  width: 77%;
+}
+header #user-welcome .auth-link {
+  padding: 7px 5px;
+  margin: 10px 22px;
+  border: 1px solid gray;
+  border-radius: 7px;
+  text-decoration: none;
+}
+header #cart-container {
+  text-align: center;
+  padding: 15px;
+}
+header #cart-container a {
+  text-decoration: none;
+}
+
+nav {
+  display: grid;
+  grid-template-columns: 57% 37%;
+  grid-column-gap: 0%;
+  align-items: center;
+  width: 100%;
+  height: 57px;
+  background-color: #A1D6E2;
+}
+nav #nav-links-container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+nav #nav-links-container .nav-link {
+  padding: 7px 5px;
+  margin: 8px 12px;
+  border: 1px solid gray;
+  border-radius: 7px;
+  text-decoration: none;
+}
+nav #search-bar form input {
+  height: 42px;
+  width: 100%;
+  padding: 3px 7px;
+  border: 2px solid #1995ad;
+  border-radius: 10px;
+}
+
+main {
+  margin: 77px 0;
+}
+main #personalised-container {
+  margin: 25px 5%;
+  width: 90%;
+  height: 500px;
+  background-color: #bcbabe;
+  border: #A1D6E2;
+}
+main #trending-container {
+  margin: 0 5%;
+  width: 90%;
+  height: 500px;
+  background-color: #bcbabe;
+  border: #A1D6E2;
+}
+
+footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #bcbabe;
+  height: 47px;
+  padding: 10px;
+}
+footer #links-container a {
+  color: #575757;
+  margin: 0 20px;
+}
+footer #links-container a:hover {
+  color: gray;
+  text-decoration: none;
+}
+footer #made-by {
+  text-align: center;
+  font-size: large;
+  margin-top: 10px;
+}
+footer #made-by a {
+  color: #1995ad;
+  text-decoration: none;
+}
+footer #made-by a:hover {
+  color: #A1D6E2;
+  font-style: oblique;
+}
+
+/*# sourceMappingURL=base.css.map */

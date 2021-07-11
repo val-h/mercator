@@ -2,12 +2,52 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=content-width, initial-scale=1.0">
         <title>{% block title %}Mercator{% endblock %}</title>
+
+        <!-- Static files -->
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        {% block css_addon %}{% endblock %} <!-- page specific css -->
     </head>
     <body>
         <header>
             <div id="mercator-logo">
-                <!-- LOGO -->
+                <a href="{% url 'pages:home' %}">
+                    <img src="{% static 'images/mercator-logo.png' %}">
+                </a>
+            </div>
+
+            <div id="user-welcome">
+                {% if user.is_authenticated %}
+                    Hello, {{ user.username }} 
+                    <a href="{% url 'users:logout' %}" class="auth-link">Logout</a>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="auth-link">Login</a>
+                    <a href="{% url 'users:register' %}" class="auth-link">Register</a>
+                {% endif %}
+            </div>
+
+            <!-- Cart button -->
+            <div id="cart-container">
+                <a style="font-size: 30px" href="#">🛒</a>
+            </div>
+        </header>
+        
+        <nav>
+            <div id="nav-links-container">
+                <a href="{% url 'pages:home' %}" class="nav-link">Home</a>
+                <a href="{% url 'pages:categories' %}" class="nav-link">Categories</a>
+                {% if user.is_authenticated %}
+                    <a href="#" class="nav-link">My account</a>
+                {% endif %}
+                <!-- 
+                {% if user.is_shop_owner %}
+                    <a href="#" class="nav-link">Shop</a>
+                {% endif %}
+                 -->
+                <a href="{% url 'pages:about' %}" class="nav-link">About</a>
+                <a href="{% url 'pages:contact' %}" class="nav-link">Contact</a>
             </div>
 
             <div id="search-bar">
@@ -16,34 +56,6 @@
                     <input type="search" placeholder="Search">
                 </form>
             </div>
-
-            <div id="user-welcome">
-                {% if user.is_authenticated %}
-                    Hello, {{ user.username }} 
-                    <a href="{% url 'users:logout' %}">Logout</a>
-                {% else %}
-                    <a href="{% url 'users:login' %}">Login</a>
-                    <a href="{% url 'users:register' %}">Register</a>
-                {% endif %}
-            </div>
-        </header>
-        
-        <nav>
-            <a href="{% url 'pages:home' %}">Home</a>
-            <a href="{% url 'pages:categories' %}">Categories</a>
-            {% if user.is_authenticated %}
-                <a href="#">My account</a>
-            {% endif %}
-            <!-- 
-            {% if user.is_shop_owner %}
-                <a href="#">Shop</a>
-            {% endif %}
-             -->
-            <a href="{% url 'pages:about' %}">About</a>
-            <a href="{% url 'pages:contact' %}">Contact</a>
-
-            <!-- Cart button -->
-            <a style="font-size: 30px" href="#">🛒</a>
         </nav>
 
         <main>
@@ -53,6 +65,8 @@
             
             {% block content %}{% endblock %}
         </main>
+
+        <script src="{% static 'js/base.js' %}"></script>
 
         <footer>
             <div id="links-container">
