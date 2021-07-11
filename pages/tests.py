@@ -3,7 +3,7 @@ from django.urls import reverse, resolve
 from . import views
 
 
-class PageTests(SimpleTestCase):
+class BasicPageTests(SimpleTestCase):
 
 
     def setUp(self):
@@ -11,6 +11,7 @@ class PageTests(SimpleTestCase):
         self.categories = self.client.get(reverse('pages:categories'))
         self.about = self.client.get(reverse('pages:about'))
         self.contact = self.client.get(reverse('pages:contact'))
+        self.privacy = self.client.get(reverse('pages:privacy'))
 
 
     def test_pages_url_names(self):
@@ -18,12 +19,14 @@ class PageTests(SimpleTestCase):
         self.assertEqual(self.categories.status_code, 200)
         self.assertEqual(self.about.status_code, 200)
         self.assertEqual(self.contact.status_code, 200)
+        self.assertEqual(self.privacy.status_code, 200)
 
     def test_pages_templates(self):
         self.assertTemplateUsed(self.home, 'home.html')
         self.assertTemplateUsed(self.categories, 'categories.html')
         self.assertTemplateUsed(self.about, 'about.html')
         self.assertTemplateUsed(self.contact, 'contact.html')
+        self.assertTemplateUsed(self.privacy, 'privacy.html')
 
     def test_pages_contain_correct_html(self):
         # For now, just a basic content check
@@ -31,6 +34,7 @@ class PageTests(SimpleTestCase):
         self.assertContains(self.categories, 'Categories')
         self.assertContains(self.about, 'About')
         self.assertContains(self.contact, 'Contact')
+        self.assertContains(self.privacy, 'Privacy Policy')
 
 
     def test_pages_does_not_contain_incorrect_html(self):
@@ -38,6 +42,7 @@ class PageTests(SimpleTestCase):
         self.assertNotContains(self.categories, 'Text that is not in categories! :_)')
         self.assertNotContains(self.about, 'Somethin not in the About page.')
         self.assertNotContains(self.contact, 'A paragraph that is actually in about page.')
+        self.assertNotContains(self.privacy, 'We are the Google Singularity! We are here to store every moment of your life...')
 
     def test_pages_url_view_resolves(self):
         home_view = resolve('/')
@@ -51,4 +56,7 @@ class PageTests(SimpleTestCase):
 
         contact_view = resolve('/contact/')
         self.assertEqual(contact_view.func.__name__, views.contact.__name__)
+
+        privacy_view = resolve('/privacy/')
+        self.assertEqual(privacy_view.func.__name__, views.privacy.__name__)
         
