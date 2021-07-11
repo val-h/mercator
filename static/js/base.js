@@ -1,3 +1,3 @@
 document.addEventListener('DOMContentLoaded', () => {
-    alert('testing js code.')
+    // alert('testing js code.')
 });
