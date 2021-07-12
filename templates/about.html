@@ -5,8 +5,42 @@
 {% block content %}
     <h1>About</h1>
     <!-- Cover image -->
+    {% load static %}
+    <img src="{% static 'images/mercator-logo-background.png' %}" alt="mercator logo">
+
     <!-- Short intro-->
+    <h1>Short description</h1>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
+        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+        eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+        sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
     <!-- Some image, maybe -->
+    <img style="max-height: 200px;" src="{% static 'images/mercator-logo.jpg' %}" alt="mercator logo, dogo edition">
+
     <!-- detailed description -->
+    <h2>Detailed description</h2>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
+        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+        eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+        sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis 
+        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
+        eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+        sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <h3>Link to this project's <a href="https://github.com/val-h/mercator/blob/main/README.md" target="_blank">README.md</a> file.</h3>
     <!-- links to sources etc. -->
 {% endblock %}
