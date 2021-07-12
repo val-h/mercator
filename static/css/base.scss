@@ -1,69 +1,75 @@
 // Variables
 $color1: #f1f1f2;
 $color2: #bcbabe;
-$color3: #A1D6E2;
+$color3: #a1d6e2;
 $color4: #1995ad;
 
 // Add media queries for different screen size, mobile/tablet/desktop
-
-body {
-    background-color: $color1;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-header {
+@media (min-width: 928px) {
+  header {
     width: 100%;
     height: 80px;
-    background-color: $color2;
+    background-color: $color4;
+    color: $color1;
     // text-align: center;
     // vertical-align: middle;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
+    position: fixed;
+    top: 0;
 
     #mercator-logo {
-        width: 20%;
+      width: 20%;
+      margin-left: 37px;
 
-        img {
-            max-height: 70px;
-            border-radius: 15%;
-        }
+      img {
+        max-height: 70px;
+        border-radius: 25%;
+      }
     }
 
     #user-welcome {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: flex-end;
-        align-items: center;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      align-items: center;
 
-        width: 77%;
+      width: 77%;
 
-        .auth-link {
-            padding: 7px 5px;
-            margin: 10px 22px;
-            border: 1px solid gray;
-            border-radius: 7px;
-            text-decoration: none;
-        }
+      .auth-link {
+        padding: 7px 5px;
+        margin: 10px 22px;
+        background-color: $color3;
+        // border: 1px solid gray;
+        border-radius: 7px;
+        text-decoration: none;
+      }
+      .auth-link:hover {
+        cursor: pointer;
+      }
     }
 
     #cart-container {
-        text-align: center;
-        padding: 15px;
-        a {
-            text-decoration: none;
+      text-align: center;
+      padding: 15px;
+      a {
+        text-decoration: none;
+        img {
+          height: 57px;
         }
+      }
     }
-}
+  }
 
-nav {
+  nav {
     display: grid;
     grid-template-columns: 57% 37%;
-    grid-column-gap: 0%;
+    grid-column-gap: 6%;
     align-items: center;
+    position: fixed;
+    top: 80px;
 
     width: 100%;
     height: 57px;
@@ -71,89 +77,288 @@ nav {
     background-color: $color3;
 
     #nav-links-container {
-        display: flex;
-        flex-wrap: nowrap;
-        // justify-content: space-between;
-        align-items: center;
+      display: flex;
+      flex-wrap: nowrap;
+      // justify-content: space-between;
+      align-items: center;
+      margin-left: 37px;
 
-        // width: 80%;
+      // width: 80%;
 
-        .nav-link {
-            padding: 7px 5px;
-            margin: 8px 12px;
-            border: 1px solid gray;
-            border-radius: 7px;
-            text-decoration: none;
-        }
+      .nav-link {
+        background-color: $color4;
+        color: $color1;
+        padding: 7px 5px;
+        margin-right: 17px;
+        // border: 1px solid $color4;
+        border-radius: 7px;
+        text-decoration: none;
+      }
+      .nav-link:hover {
+        background-color: $color1;
+        color: $color4;
+        // border: 1px solid gray;
+        box-shadow: 0 0 7px 5px $color1;
+        cursor: pointer;
+      }
     }
 
     #search-bar {
-        form {
-            input {
-                height: 42px;
-                width: 100%;
-                padding: 3px 7px;
-                border: 2px solid $color4;
-                border-radius: 10px;
-            }
+      margin-right: 37px;
+      form {
+        input {
+          font-size: 17px;
+          height: 37px;
+          width: 100%;
+          padding: 3px 7px;
+          border: 2px solid $color4;
+          border-radius: 10px;
         }
+        input:hover {
+          box-shadow: 0 0 7px 3px $color1;
+          border: none;
+        }
+      }
     }
-}
+  }
 
-main {
-    margin: 77px 0;
+  main {
+    margin: 170px 0;
+
+    h1 {
+      text-align: center;
+    }
 
     #personalised-container {
-        margin: 25px 5%;
-        width: 90%;
-        height: 500px;
-        background-color: $color2;
-        border: $color3;
+      margin: 25px 5%;
+      width: 90%;
+      height: 500px;
+      background-color: $color2;
+      border: $color3;
     }
 
     #trending-container {
-        margin: 0 5%;
-        width: 90%;
-        height: 500px;
-        background-color: $color2;
-        border: $color3;
+      margin: 0 5%;
+      width: 90%;
+      height: 500px;
+      background-color: $color2;
+      border: $color3;
     }
-}
+  }
 
-footer {
-    position: sticky;
+  footer {
+    position: fixed;
     bottom: 0;
     width: 100%;
     text-align: center;
     vertical-align: middle;
-    background-color: $color2;
+    background-color: $color3;
     height: 47px;
     padding: 10px;
 
     #links-container {
-        a {
-            color: rgb(87, 87, 87);
-            margin: 0 20px;
-        }
-        a:hover {
-            color: gray;
-            text-decoration: none;
-        }
+      a {
+        color: rgb(87, 87, 87);
+        margin: 0 20px;
+      }
+      a:hover {
+        color: gray;
+        text-decoration: none;
+      }
     }
 
     #made-by {
-        // width: 100%;
-        text-align: center;
-        font-size: large;
-        margin-top: 10px;
+      text-align: center;
+      font-size: large;
+      margin-top: 10px;
 
-        a {
-            color: $color4;
-            text-decoration: none;
-        }
-        a:hover {
-            color: $color3;
-            font-style: oblique;
-        }
+      a {
+        color: $color4;
+        text-decoration: none;
+      }
+      a:hover {
+        color: $color1;
+        font-style: oblique;
+      }
     }
+  }
+}
+
+@media (max-width: 927px) {
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: $color4;
+    color: $color1;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+
+    #mercator-logo {
+      width: 100%;
+      height: 77px;
+      text-align: center;
+      vertical-align: middle;
+      img {
+        max-height: 70px;
+        border-radius: 25%;
+      }
+    }
+
+    // Don't display on smaller devices
+    #user-welcome {
+      display: none;
+      width: 85%;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      align-items: center;
+
+      .auth-link {
+        padding: 7px 5px;
+        margin: 7px 16px;
+        // border: 1px solid gray;
+        background-color: $color3;
+        border-radius: 7px;
+        text-decoration: none;
+      }
+      .auth-link:hover {
+        cursor: pointer;
+        background-color: $color1;
+      }
+    }
+
+    #cart-container {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      text-align: center;
+      padding: 7px;
+      a {
+        text-decoration: none;
+        img {
+          max-height: 37px;
+        }
+      }
+    }
+  }
+
+  nav {
+    width: 100%;
+    // height: 87px;
+    background-color: $color3;
+    background-color: $color3;
+    position: fixed;
+    top: 120px;
+
+    #nav-links-container {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      height: 47px;
+
+      .nav-link {
+        background-color: $color4;
+        color: $color1;
+        border-radius: 7px;
+        text-decoration: none;
+        padding: 5px 3px;
+        margin-right: 10px;
+      }
+      .nav-link:hover {
+        box-shadow: 0 0 4px 2px $color1;
+        background-color: $color1;
+        color: $color4;
+        box-shadow: 0 0 7px 5px $color1;
+        cursor: pointer;
+      }
+    }
+
+    #search-bar {
+      padding-bottom: 7px;
+      form {
+        text-align: center;
+        input {
+          height: 27px;
+          width: 75%;
+          padding: 3px 7px;
+          border: 2px solid $color4;
+          border-radius: 10px;
+        }
+        input:hover {
+          box-shadow: 0 0 7px 3px $color1;
+        }
+      }
+    }
+  }
+
+  main {
+    margin: 227px 0;
+
+    h1 {
+      text-align: center;
+    }
+
+    #personalised-container {
+      margin: 25px 5%;
+      width: 90%;
+      // height: 500px;
+      background-color: $color2;
+      border: $color3;
+    }
+
+    #trending-container {
+      margin: 0 5%;
+      width: 90%;
+      // height: 500px;
+      background-color: $color2;
+      border: $color3;
+    }
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    background-color: $color3;
+    height: 37px;
+    padding: 7px;
+
+    #links-container {
+      a {
+        color: rgb(87, 87, 87);
+        margin: 0 17px;
+      }
+      a:hover {
+        color: gray;
+        text-decoration: none;
+      }
+    }
+
+    #made-by {
+      text-align: center;
+      font-size: 15px;
+      margin-top: 7px;
+
+      a {
+        color: $color4;
+        text-decoration: none;
+      }
+      a:hover {
+        color: $color1;
+        font-style: oblique;
+      }
+    }
+  }
+}
+
+// these don't change on different devices, WIP
+body {
+  background-color: $color1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }

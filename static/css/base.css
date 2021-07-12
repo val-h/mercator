@@ -1,125 +1,307 @@
+@media (min-width: 928px) {
+  header {
+    width: 100%;
+    height: 80px;
+    background-color: #1995ad;
+    color: #f1f1f2;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+  }
+  header #mercator-logo {
+    width: 20%;
+    margin-left: 37px;
+  }
+  header #mercator-logo img {
+    max-height: 70px;
+    border-radius: 25%;
+  }
+  header #user-welcome {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: center;
+    width: 77%;
+  }
+  header #user-welcome .auth-link {
+    padding: 7px 5px;
+    margin: 10px 22px;
+    background-color: #a1d6e2;
+    border-radius: 7px;
+    text-decoration: none;
+  }
+  header #user-welcome .auth-link:hover {
+    cursor: pointer;
+  }
+  header #cart-container {
+    text-align: center;
+    padding: 15px;
+  }
+  header #cart-container a {
+    text-decoration: none;
+  }
+  header #cart-container a img {
+    height: 57px;
+  }
+
+  nav {
+    display: grid;
+    grid-template-columns: 57% 37%;
+    grid-column-gap: 6%;
+    align-items: center;
+    position: fixed;
+    top: 80px;
+    width: 100%;
+    height: 57px;
+    background-color: #a1d6e2;
+  }
+  nav #nav-links-container {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-left: 37px;
+  }
+  nav #nav-links-container .nav-link {
+    background-color: #1995ad;
+    color: #f1f1f2;
+    padding: 7px 5px;
+    margin-right: 17px;
+    border-radius: 7px;
+    text-decoration: none;
+  }
+  nav #nav-links-container .nav-link:hover {
+    background-color: #f1f1f2;
+    color: #1995ad;
+    box-shadow: 0 0 7px 5px #f1f1f2;
+    cursor: pointer;
+  }
+  nav #search-bar {
+    margin-right: 37px;
+  }
+  nav #search-bar form input {
+    font-size: 17px;
+    height: 37px;
+    width: 100%;
+    padding: 3px 7px;
+    border: 2px solid #1995ad;
+    border-radius: 10px;
+  }
+  nav #search-bar form input:hover {
+    box-shadow: 0 0 7px 3px #f1f1f2;
+    border: none;
+  }
+
+  main {
+    margin: 170px 0;
+  }
+  main h1 {
+    text-align: center;
+  }
+  main #personalised-container {
+    margin: 25px 5%;
+    width: 90%;
+    height: 500px;
+    background-color: #bcbabe;
+    border: #a1d6e2;
+  }
+  main #trending-container {
+    margin: 0 5%;
+    width: 90%;
+    height: 500px;
+    background-color: #bcbabe;
+    border: #a1d6e2;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #a1d6e2;
+    height: 47px;
+    padding: 10px;
+  }
+  footer #links-container a {
+    color: #575757;
+    margin: 0 20px;
+  }
+  footer #links-container a:hover {
+    color: gray;
+    text-decoration: none;
+  }
+  footer #made-by {
+    text-align: center;
+    font-size: large;
+    margin-top: 10px;
+  }
+  footer #made-by a {
+    color: #1995ad;
+    text-decoration: none;
+  }
+  footer #made-by a:hover {
+    color: #f1f1f2;
+    font-style: oblique;
+  }
+}
+@media (max-width: 927px) {
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #1995ad;
+    color: #f1f1f2;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+  }
+  header #mercator-logo {
+    width: 100%;
+    height: 77px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  header #mercator-logo img {
+    max-height: 70px;
+    border-radius: 25%;
+  }
+  header #user-welcome {
+    display: none;
+    width: 85%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  header #user-welcome .auth-link {
+    padding: 7px 5px;
+    margin: 7px 16px;
+    background-color: #a1d6e2;
+    border-radius: 7px;
+    text-decoration: none;
+  }
+  header #user-welcome .auth-link:hover {
+    cursor: pointer;
+    background-color: #f1f1f2;
+  }
+  header #cart-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+    padding: 7px;
+  }
+  header #cart-container a {
+    text-decoration: none;
+  }
+  header #cart-container a img {
+    max-height: 37px;
+  }
+
+  nav {
+    width: 100%;
+    background-color: #a1d6e2;
+    background-color: #a1d6e2;
+    position: fixed;
+    top: 120px;
+  }
+  nav #nav-links-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 47px;
+  }
+  nav #nav-links-container .nav-link {
+    background-color: #1995ad;
+    color: #f1f1f2;
+    border-radius: 7px;
+    text-decoration: none;
+    padding: 5px 3px;
+    margin-right: 10px;
+  }
+  nav #nav-links-container .nav-link:hover {
+    box-shadow: 0 0 4px 2px #f1f1f2;
+    background-color: #f1f1f2;
+    color: #1995ad;
+    box-shadow: 0 0 7px 5px #f1f1f2;
+    cursor: pointer;
+  }
+  nav #search-bar {
+    padding-bottom: 7px;
+  }
+  nav #search-bar form {
+    text-align: center;
+  }
+  nav #search-bar form input {
+    height: 27px;
+    width: 75%;
+    padding: 3px 7px;
+    border: 2px solid #1995ad;
+    border-radius: 10px;
+  }
+  nav #search-bar form input:hover {
+    box-shadow: 0 0 7px 3px #f1f1f2;
+  }
+
+  main {
+    margin: 227px 0;
+  }
+  main h1 {
+    text-align: center;
+  }
+  main #personalised-container {
+    margin: 25px 5%;
+    width: 90%;
+    background-color: #bcbabe;
+    border: #a1d6e2;
+  }
+  main #trending-container {
+    margin: 0 5%;
+    width: 90%;
+    background-color: #bcbabe;
+    border: #a1d6e2;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #a1d6e2;
+    height: 37px;
+    padding: 7px;
+  }
+  footer #links-container a {
+    color: #575757;
+    margin: 0 17px;
+  }
+  footer #links-container a:hover {
+    color: gray;
+    text-decoration: none;
+  }
+  footer #made-by {
+    text-align: center;
+    font-size: 15px;
+    margin-top: 7px;
+  }
+  footer #made-by a {
+    color: #1995ad;
+    text-decoration: none;
+  }
+  footer #made-by a:hover {
+    color: #f1f1f2;
+    font-style: oblique;
+  }
+}
 body {
   background-color: #f1f1f2;
   width: 100%;
   margin: 0;
   padding: 0;
-}
-
-header {
-  width: 100%;
-  height: 80px;
-  background-color: #bcbabe;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-}
-header #mercator-logo {
-  width: 20%;
-}
-header #mercator-logo img {
-  max-height: 70px;
-  border-radius: 15%;
-}
-header #user-welcome {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-  align-items: center;
-  width: 77%;
-}
-header #user-welcome .auth-link {
-  padding: 7px 5px;
-  margin: 10px 22px;
-  border: 1px solid gray;
-  border-radius: 7px;
-  text-decoration: none;
-}
-header #cart-container {
-  text-align: center;
-  padding: 15px;
-}
-header #cart-container a {
-  text-decoration: none;
-}
-
-nav {
-  display: grid;
-  grid-template-columns: 57% 37%;
-  grid-column-gap: 0%;
-  align-items: center;
-  width: 100%;
-  height: 57px;
-  background-color: #A1D6E2;
-}
-nav #nav-links-container {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-nav #nav-links-container .nav-link {
-  padding: 7px 5px;
-  margin: 8px 12px;
-  border: 1px solid gray;
-  border-radius: 7px;
-  text-decoration: none;
-}
-nav #search-bar form input {
-  height: 42px;
-  width: 100%;
-  padding: 3px 7px;
-  border: 2px solid #1995ad;
-  border-radius: 10px;
-}
-
-main {
-  margin: 77px 0;
-}
-main #personalised-container {
-  margin: 25px 5%;
-  width: 90%;
-  height: 500px;
-  background-color: #bcbabe;
-  border: #A1D6E2;
-}
-main #trending-container {
-  margin: 0 5%;
-  width: 90%;
-  height: 500px;
-  background-color: #bcbabe;
-  border: #A1D6E2;
-}
-
-footer {
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  vertical-align: middle;
-  background-color: #bcbabe;
-  height: 47px;
-  padding: 10px;
-}
-footer #links-container a {
-  color: #575757;
-  margin: 0 20px;
-}
-footer #links-container a:hover {
-  color: gray;
-  text-decoration: none;
-}
-footer #made-by {
-  text-align: center;
-  font-size: large;
-  margin-top: 10px;
-}
-footer #made-by a {
-  color: #1995ad;
-  text-decoration: none;
-}
-footer #made-by a:hover {
-  color: #A1D6E2;
-  font-style: oblique;
 }
 
 /*# sourceMappingURL=base.css.map */
