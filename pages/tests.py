@@ -3,8 +3,7 @@ from django.urls import reverse, resolve
 from . import views
 
 
-class BasicPageTests(SimpleTestCase):
-
+class HomePageTests(SimpleTestCase):
 
     def setUp(self):
         self.home = self.client.get(reverse('pages:home'))
@@ -59,4 +58,11 @@ class BasicPageTests(SimpleTestCase):
 
         privacy_view = resolve('/privacy/')
         self.assertEqual(privacy_view.func.__name__, views.privacy.__name__)
-        
+
+
+# TODO, refactor the tests with a better design for each one
+# try to automate the, keep it DRY, at least for the basic tests
+class CategoriesPageTests(SimpleTestCase):
+
+    def setUp(self):
+        self.page = self.client.get('categories/')
