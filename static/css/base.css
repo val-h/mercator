@@ -2,8 +2,8 @@
   header {
     width: 100%;
     height: 80px;
-    background-color: #1995ad;
-    color: #f1f1f2;
+    background-color: #212529;
+    color: #f8f9fa;
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
@@ -29,12 +29,15 @@
   header #user-welcome .auth-link {
     padding: 7px 5px;
     margin: 10px 22px;
-    background-color: #a1d6e2;
+    background-color: #f6bd60;
+    color: #212529;
     border-radius: 7px;
     text-decoration: none;
   }
   header #user-welcome .auth-link:hover {
     cursor: pointer;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 5px 3px #f8f9fa;
   }
   header #cart-container {
     text-align: center;
@@ -56,7 +59,7 @@
     top: 80px;
     width: 100%;
     height: 57px;
-    background-color: #a1d6e2;
+    background-color: #343a40;
   }
   nav #nav-links-container {
     display: flex;
@@ -65,17 +68,17 @@
     margin-left: 37px;
   }
   nav #nav-links-container .nav-link {
-    background-color: #1995ad;
-    color: #f1f1f2;
+    background-color: #f6bd60;
+    color: #212529;
     padding: 7px 5px;
     margin-right: 17px;
     border-radius: 7px;
     text-decoration: none;
   }
   nav #nav-links-container .nav-link:hover {
-    background-color: #f1f1f2;
-    color: #1995ad;
-    box-shadow: 0 0 7px 5px #f1f1f2;
+    background-color: #f8f9fa;
+    color: #212529;
+    box-shadow: 0 0 7px 5px #f8f9fa;
     cursor: pointer;
   }
   nav #search-bar {
@@ -86,11 +89,11 @@
     height: 37px;
     width: 100%;
     padding: 3px 7px;
-    border: 2px solid #1995ad;
+    border: 2px solid #212529;
     border-radius: 10px;
   }
   nav #search-bar form input:hover {
-    box-shadow: 0 0 7px 3px #f1f1f2;
+    box-shadow: 0 0 7px 3px #f8f9fa;
     border: none;
   }
 
@@ -104,15 +107,15 @@
     margin: 25px 5%;
     width: 90%;
     height: 500px;
-    background-color: #bcbabe;
-    border: #a1d6e2;
+    background-color: #f6bd60;
+    border: #343a40;
   }
   main #trending-container {
     margin: 0 5%;
     width: 90%;
     height: 500px;
-    background-color: #bcbabe;
-    border: #a1d6e2;
+    background-color: #f6bd60;
+    border: #343a40;
   }
 
   footer {
@@ -121,16 +124,16 @@
     width: 100%;
     text-align: center;
     vertical-align: middle;
-    background-color: #a1d6e2;
+    background-color: #343a40;
     height: 47px;
     padding: 10px;
   }
   footer #links-container a {
-    color: #575757;
+    color: #f6bd60;
     margin: 0 20px;
   }
   footer #links-container a:hover {
-    color: gray;
+    color: black;
     text-decoration: none;
   }
   footer #made-by {
@@ -139,11 +142,11 @@
     margin-top: 10px;
   }
   footer #made-by a {
-    color: #1995ad;
+    color: #f6bd60;
     text-decoration: none;
   }
   footer #made-by a:hover {
-    color: #f1f1f2;
+    color: #f8f9fa;
     font-style: oblique;
   }
 }
@@ -151,8 +154,8 @@
   header {
     display: flex;
     flex-wrap: wrap;
-    background-color: #1995ad;
-    color: #f1f1f2;
+    background-color: #212529;
+    color: #f8f9fa;
     width: 100%;
     position: fixed;
     top: 0px;
@@ -164,6 +167,7 @@
     vertical-align: middle;
   }
   header #mercator-logo img {
+    margin-top: 7px;
     max-height: 70px;
     border-radius: 25%;
   }
@@ -178,13 +182,15 @@
   header #user-welcome .auth-link {
     padding: 7px 5px;
     margin: 7px 16px;
-    background-color: #a1d6e2;
+    background-color: #f6bd60;
+    color: #212529;
     border-radius: 7px;
     text-decoration: none;
   }
   header #user-welcome .auth-link:hover {
     cursor: pointer;
-    background-color: #f1f1f2;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 5px 3px #f8f9fa;
   }
   header #cart-container {
     position: fixed;
@@ -202,8 +208,8 @@
 
   nav {
     width: 100%;
-    background-color: #a1d6e2;
-    background-color: #a1d6e2;
+    background-color: #343a40;
+    background-color: #343a40;
     position: fixed;
     top: 120px;
   }
@@ -215,18 +221,18 @@
     height: 47px;
   }
   nav #nav-links-container .nav-link {
-    background-color: #1995ad;
-    color: #f1f1f2;
+    background-color: #f6bd60;
+    color: #f8f9fa;
     border-radius: 7px;
     text-decoration: none;
     padding: 5px 3px;
     margin-right: 10px;
   }
   nav #nav-links-container .nav-link:hover {
-    box-shadow: 0 0 4px 2px #f1f1f2;
-    background-color: #f1f1f2;
-    color: #1995ad;
-    box-shadow: 0 0 7px 5px #f1f1f2;
+    box-shadow: 0 0 4px 2px #f8f9fa;
+    background-color: #f8f9fa;
+    color: #212529;
+    box-shadow: 0 0 7px 5px #f8f9fa;
     cursor: pointer;
   }
   nav #search-bar {
@@ -239,11 +245,11 @@
     height: 27px;
     width: 75%;
     padding: 3px 7px;
-    border: 2px solid #1995ad;
+    border: 2px solid #212529;
     border-radius: 10px;
   }
   nav #search-bar form input:hover {
-    box-shadow: 0 0 7px 3px #f1f1f2;
+    box-shadow: 0 0 7px 3px #f8f9fa;
   }
 
   main {
@@ -255,14 +261,14 @@
   main #personalised-container {
     margin: 25px 5%;
     width: 90%;
-    background-color: #bcbabe;
-    border: #a1d6e2;
+    background-color: #f6bd60;
+    border: #343a40;
   }
   main #trending-container {
     margin: 0 5%;
     width: 90%;
-    background-color: #bcbabe;
-    border: #a1d6e2;
+    background-color: #f6bd60;
+    border: #343a40;
   }
 
   footer {
@@ -271,7 +277,7 @@
     width: 100%;
     text-align: center;
     vertical-align: middle;
-    background-color: #a1d6e2;
+    background-color: #343a40;
     height: 37px;
     padding: 7px;
   }
@@ -289,16 +295,16 @@
     margin-top: 7px;
   }
   footer #made-by a {
-    color: #1995ad;
+    color: #f6bd60;
     text-decoration: none;
   }
   footer #made-by a:hover {
-    color: #f1f1f2;
+    color: #f8f9fa;
     font-style: oblique;
   }
 }
 body {
-  background-color: #f1f1f2;
+  background-color: #f8f9fa;
   width: 100%;
   margin: 0;
   padding: 0;

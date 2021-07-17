@@ -1,8 +1,17 @@
 // Variables
-$color1: #f1f1f2;
-$color2: #bcbabe;
-$color3: #a1d6e2;
-$color4: #1995ad;
+
+// First theme
+// $color1: #f1f1f2;
+// $color2: #bcbabe;
+// $color3: #a1d6e2;
+// $color4: #1995ad;
+
+// Test theme
+$color1: #f8f9fa;
+$color2: #f6bd60;
+$color3: #343a40;
+$color4: #212529;
+// $color5: #adb5bd;
 
 // Add media queries for different screen size, mobile/tablet/desktop
 @media (min-width: 928px) {
@@ -41,13 +50,16 @@ $color4: #1995ad;
       .auth-link {
         padding: 7px 5px;
         margin: 10px 22px;
-        background-color: $color3;
+        background-color: $color2;
+        color: $color4;
         // border: 1px solid gray;
         border-radius: 7px;
         text-decoration: none;
       }
       .auth-link:hover {
         cursor: pointer;
+        background-color: $color1;
+        box-shadow: 0 0 5px 3px $color1;
       }
     }
 
@@ -86,8 +98,8 @@ $color4: #1995ad;
       // width: 80%;
 
       .nav-link {
-        background-color: $color4;
-        color: $color1;
+        background-color: $color2;
+        color: $color4;
         padding: 7px 5px;
         margin-right: 17px;
         // border: 1px solid $color4;
@@ -158,11 +170,11 @@ $color4: #1995ad;
 
     #links-container {
       a {
-        color: rgb(87, 87, 87);
+        color: $color2;
         margin: 0 20px;
       }
       a:hover {
-        color: gray;
+        color: black;
         text-decoration: none;
       }
     }
@@ -173,7 +185,7 @@ $color4: #1995ad;
       margin-top: 10px;
 
       a {
-        color: $color4;
+        color: $color2;
         text-decoration: none;
       }
       a:hover {
@@ -200,6 +212,7 @@ $color4: #1995ad;
       text-align: center;
       vertical-align: middle;
       img {
+        margin-top: 7px;
         max-height: 70px;
         border-radius: 25%;
       }
@@ -218,13 +231,15 @@ $color4: #1995ad;
         padding: 7px 5px;
         margin: 7px 16px;
         // border: 1px solid gray;
-        background-color: $color3;
+        background-color: $color2;
+        color: $color4;
         border-radius: 7px;
         text-decoration: none;
       }
       .auth-link:hover {
         cursor: pointer;
         background-color: $color1;
+        box-shadow: 0 0 5px 3px $color1;
       }
     }
 
@@ -259,7 +274,7 @@ $color4: #1995ad;
       height: 47px;
 
       .nav-link {
-        background-color: $color4;
+        background-color: $color2;
         color: $color1;
         border-radius: 7px;
         text-decoration: none;
@@ -344,7 +359,7 @@ $color4: #1995ad;
       margin-top: 7px;
 
       a {
-        color: $color4;
+        color: $color2;
         text-decoration: none;
       }
       a:hover {
