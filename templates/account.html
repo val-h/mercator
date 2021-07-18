@@ -4,6 +4,7 @@
 
 {% block content %}
 <div id="profile-page-container">
+    <h1>Account</h1>
     <div id="profile-sidebar">
         <!-- Options -->
     </div>
@@ -11,7 +12,9 @@
     <div id="profile-main-panel">
         <!-- not visible by default, switch with js -->
         <div id="profile">
-
+            <p>User id: {{ user.id }}</p>
+            <p>Username: {{ user.username }}</p>
+            <p>Email: {{ user.email }}</p>
         </div>
         <div id="settings">
 
