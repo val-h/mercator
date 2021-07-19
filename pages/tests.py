@@ -133,6 +133,7 @@ class AccountPageTests(TestCase):
         page_view = resolve('/account/')
         self.assertEqual(page_view.func.__name__, views.account.__name__)
 
+
 class SearchPageTests(SimpleTestCase):
     def setUp(self):
         self.page = self.client.get(reverse('pages:search', kwargs={'pattern': 'keyword7'}))

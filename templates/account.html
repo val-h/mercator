@@ -12,9 +12,15 @@
     <div id="profile-main-panel">
         <!-- not visible by default, switch with js -->
         <div id="profile">
+            <h3>General information</h3>
             <p>User id: {{ user.id }}</p>
             <p>Username: {{ user.username }}</p>
             <p>Email: {{ user.email }}</p>
+            <p>Account type: {{ user.account_type }}</p>
+
+            <h3>Stats</h3>
+            <p>Total items bough: {{ user.total_items_bought }}</p>
+            <p>Total reviews: {{ user.total_reviews }}</p>
         </div>
         <div id="settings">
 
