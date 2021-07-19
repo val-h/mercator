@@ -1,0 +1,101 @@
+from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
+from PIL import Image as pil_Image
+import io
+
+from .models import Product, Image
+
+
+class ProductTests(TestCase):
+    def setUp(self):
+        self.book_product = Product.objects.create(
+            title='Lord of the Rings:The Fellowship of the Ring',
+            description="""A meek Hobbit from the Shire and eight companions 
+            set out on a journey to destroy the powerful One Ring and save 
+            Middle-earth from the Dark Lord Sauron.""",
+            price=29.99,
+            quantity=75
+        )
+        self.book_cover = Image.objects.create(
+            product=self.book_product,
+            # I can't load a custom image from code, yet
+        )
+
+        self.flower_product = Product.objects.create(
+            title='Rose',
+            description='A beautiful red rose.',
+            price=3.50,
+            quantity=1001
+        )
+        self.flower_photo = Image.objects.create(
+            product=self.flower_product,
+        )
+    
+    def test_product_title(self):
+        self.assertEqual(
+            self.book_product.title,
+            'Lord of the Rings:The Fellowship of the Ring')
+        self.assertEqual(self.flower_product.title, 'Rose')
+
+    def test_product_description(self):
+        self.assertEqual(
+            self.book_product.description,
+            """A meek Hobbit from the Shire and eight companions 
+            set out on a journey to destroy the powerful One Ring and save 
+            Middle-earth from the Dark Lord Sauron.""")
+        self.assertEqual(
+            self.flower_product.description,
+            'A beautiful red rose.')
+
+    def test_product_image(self):
+        self.assertTrue(self.book_product.images.first().image)
+        self.assertEqual(
+            self.book_product.images.first().image.url,
+            '/media/images/default_product.png')
+        self.assertTrue(self.flower_product.images.first().image)
+
+    def test_product_price(self):
+        self.assertEqual(self.book_product.price, 29.99)
+        self.assertEqual(self.flower_product.price, 3.50)
+
+    def test_product_quantity(self):
+        self.assertEqual(self.book_product.quantity, 75)
+        self.assertEqual(self.flower_product.quantity, 1001)
+
+
+# This might be unnecessary but i will keep it if Image model
+# needs some extentions
+class ImageTests(TestCase):
+    def setUp(self):
+        self.product = Product.objects.create(
+            title='LotR',
+            description='Test description for Image.',
+        )
+
+        # image_file = io.BytesIO(f'{settings.MEDIA_ROOT}/images/LotR_FotR.jpg')
+        self.book_image = Image.objects.create(
+            product=self.product,
+
+            # custom image upload is giving me troubles atm, will research it
+
+            # image=SimpleUploadedFile(
+            #     name='LotR_FotR.jpg',
+            #     content=open(settings.MEDIA_ROOT + '/images/LotR_FotR.jpg'),
+            #     content_type='image/jpeg')
+
+            # doesn't actually open it, throws an error
+            # image=pil_Image.open(image_file)
+            # image=pil_Image.open(f'{settings.MEDIA_ROOT}/images/LotR_FotR.jpg')
+        )
+    
+    def test_image_product(self):
+        self.assertEqual(self.book_image.product.title, 'LotR')
+        self.assertEqual(self.book_image.product.quantity, 1)
+
+    def test_image_file_upload(self):
+        # default image at least works
+        self.assertTrue(self.book_image.image)
+        self.assertEqual(
+            self.book_image.image.url,
+            '/media/images/default_product.png')

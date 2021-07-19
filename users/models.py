@@ -7,6 +7,7 @@ class CustomUser(AbstractUser):
     # stats, should have been positive integer field
     total_reviews = models.IntegerField(default=0) 
     total_items_bought = models.IntegerField(default=0)
+    is_shop_owner = models.BooleanField(default=False)
 
     CUSTOMER = 'C'
     MERCHANT = 'M'
