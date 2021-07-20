@@ -1,10 +1,14 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
-from PIL import Image as pil_Image
-import io
+from django.contrib.auth import get_user_model
+# from PIL import Image as pil_Image
+# import io
 
-from .models import Product, Image
+from .models import Product, Image, Order
+
+
+User = get_user_model()
 
 
 class ProductTests(TestCase):
@@ -16,7 +20,7 @@ class ProductTests(TestCase):
             Middle-earth from the Dark Lord Sauron.""",
             price=29.99,
             quantity=75
-        )
+        ) # Add more images to this product
         self.book_cover = Image.objects.create(
             product=self.book_product,
             # I can't load a custom image from code, yet
@@ -99,3 +103,33 @@ class ImageTests(TestCase):
         self.assertEqual(
             self.book_image.image.url,
             '/media/images/default_product.png')
+
+
+class OrderTests(TestCase):
+    def setUp(self):
+        # Create a sample user
+        self.customer = User.objects.create(
+            username='test',
+            password='testPass123',
+            email='test@user.xyz'
+        )
+        self.item1 = Product.objects.create(
+            title='Random Book',
+            description='Random Book Description'
+        )
+        self.item2 = Product.objects.create(
+            title='Random Shirt',
+            description='Random Shirt Description'
+        )
+        self.order = Order.objects.create(
+            customer=self.customer,
+        )
+
+    def test_order_user(self):
+        self.assertTrue(self.order.customer)
+
+    def test_order_items_add(self):
+        self.order.items.add(self.item1)
+        self.order.items.add(self.item2)
+        self.assertEqual(self.order.items.first().title, 'Random Book')
+        self.assertEqual(self.order.items.last().title, 'Random Shirt')

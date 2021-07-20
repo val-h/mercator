@@ -1,4 +1,8 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 class Product(models.Model):
@@ -14,6 +18,7 @@ class Product(models.Model):
     # Shop foreign key
     times_bought = models.IntegerField(default=0)
     total_views = models.IntegerField(default=0)
+    # shop = foreignKey/onetoone
 
     def __str__(self):
         return str(self.title)
@@ -30,3 +35,33 @@ class Image(models.Model):
 
     def __str__(self):
         return f'{self.product.title}\'s image'
+
+
+class Order(models.Model):
+    items = models.ManyToManyField(
+        Product,
+        blank=True,
+        related_name='all_orders')
+
+    PLACED = 'PL'
+    CANCELED = 'CA'
+    PROCESSING = 'PR'
+    COMPLETE = 'CO'
+    DELIVERED = 'DE'
+    ORDER_OPTIONS = [
+        (PLACED, 'Active'),
+        (PROCESSING, 'Processing'),
+        (COMPLETE, 'Complete'),
+        (DELIVERED, 'Delivered')
+    ]
+    status = models.CharField(
+        max_length=2,
+        choices=ORDER_OPTIONS,
+        default=PLACED
+        )
+    date_ordered = models.DateTimeField(auto_now_add=True)
+    customer = models.OneToOneField(
+        User,
+        on_delete=models.PROTECT,
+        related_name='orders')
+    # shipment = models.OneToOneField(Shipment, on_delete=models.PROTECT)
