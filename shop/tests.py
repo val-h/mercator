@@ -127,9 +127,21 @@ class OrderTests(TestCase):
 
     def test_order_user(self):
         self.assertTrue(self.order.customer)
+        self.assertEqual(self.order.customer.username, 'test')
 
     def test_order_items_add(self):
         self.order.items.add(self.item1)
         self.order.items.add(self.item2)
         self.assertEqual(self.order.items.first().title, 'Random Book')
         self.assertEqual(self.order.items.last().title, 'Random Shirt')
+
+    def test_order_status_change(self):
+        self.assertEqual(self.order.status, 'PL') # Order.PLACED by default
+        self.order.status = Order.PROCESSING
+        self.assertEqual(self.order.status, 'PR')
+        self.order.status = Order.COMPLETE
+        self.assertEqual(self.order.status, 'CO')
+        self.order.status =  Order.DELIVERED
+        self.assertEqual(self.order.status, 'DE')
+        self.order.status =  Order.CANCELED
+        self.assertEqual(self.order.status, 'CA')
