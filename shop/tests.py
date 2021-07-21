@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 # from PIL import Image as pil_Image
 # import io
 
-from .models import Product, Image, Order
+from .models import Product, Image, Order, Shipment
 
 
 User = get_user_model()
@@ -145,3 +145,8 @@ class OrderTests(TestCase):
         self.assertEqual(self.order.status, 'DE')
         self.order.status =  Order.CANCELED
         self.assertEqual(self.order.status, 'CA')
+
+
+class ShipmentTests(TestCase):
+    def setUp(self):
+

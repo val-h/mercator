@@ -60,8 +60,43 @@ class Order(models.Model):
         default=PLACED
         )
     date_ordered = models.DateTimeField(auto_now_add=True)
-    customer = models.OneToOneField(
+    customer = models.ManyToManyField(
+        User,
+        # Changeto models.PROTECT, possibly
+        # on_delete=models.CASCADE,
+        related_name='orders')
+
+
+class Shipment(models.Model):
+    customer = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
-        related_name='orders')
-    # shipment = models.OneToOneField(Shipment, on_delete=models.PROTECT)
+        related_name='shipments')
+    order = models.OneToOneField(
+        Order,
+        on_delete=models.PROTECT,
+        related_name='shipment')
+    email = models.EmailField(max_length=254)
+    first_name = models.CharField(max_length=80)
+    last_name = models.CharField(max_length=80)
+    company = models.CharField(max_length=120, blank=True)
+    address = models.CharField(max_length=120)
+    post_code = models.CharField(max_length=120)
+    state = models.CharField(max_length=80)
+    city = models.CharField(max_length=120)
+    # No RegEx or library for handling hpone numbers
+    contact_number = models.CharField(max_length=20)
+
+    MAIL = 'ML'
+    PARCEL_DELIVERY = 'PD'
+    JEFF_BEZOS = 'JB'
+    SHIPPING_METHODS = [
+        (MAIL, 'Mail'),
+        (PARCEL_DELIVERY, 'Parcel Delivery Company'),
+        (JEFF_BEZOS, 'Jeff Bezos with a bycicle (cheapest)')
+    ]
+    shipping_method = models.CharField(
+        max_length=2,
+        choices=SHIPPING_METHODS,
+        default=MAIL)
+
