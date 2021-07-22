@@ -60,25 +60,29 @@ class Order(models.Model):
         default=PLACED
         )
     date_ordered = models.DateTimeField(auto_now_add=True)
-    customer = models.ManyToManyField(
-        User,
-        # Changeto models.PROTECT, possibly
-        # on_delete=models.CASCADE,
-        related_name='orders')
-
-
-class Shipment(models.Model):
     customer = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         default=None,
+        related_name='orders')
+
+
+class Shipment(models.Model):
+    # might as well be useless, the customer is within the order ...
+    # DELETE
+    customer = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        default=None,
+        null=True,
         blank=True,
         related_name='shipments')
-        # Possibly move to Foreign, orders may have more than 1 shipment
+    # Possibly move to Foreign, orders may have more than 1 shipment
     order = models.OneToOneField(
         Order,
         on_delete=models.PROTECT,
         default=None,
+        null=True,
         blank=True,
         related_name='shipment')
     email = models.EmailField(max_length=254)
@@ -89,7 +93,8 @@ class Shipment(models.Model):
     post_code = models.CharField(max_length=120)
     state = models.CharField(max_length=80)
     city = models.CharField(max_length=120)
-    # No RegEx or library for handling hpone numbers
+    # No RegEx or library for handling phone numbers
+    # Add some basic validators and stripping of white spaces
     contact_number = models.CharField(max_length=20)
 
     MAIL = 'ML'

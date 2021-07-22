@@ -149,4 +149,61 @@ class OrderTests(TestCase):
 
 class ShipmentTests(TestCase):
     def setUp(self):
-        pass
+        self.shipment = Shipment.objects.create(
+            email='test@mail.com',
+            first_name='John',
+            last_name='Doe',
+            address='1337 Leet Street',
+            post_code='12345',
+            state='Moon Sector 17',
+            city='Alexandria',
+            contact_number='+133755775577'
+        )
+
+        # helper models
+        self.customer = User.objects.create(
+            username='JohnDoe',
+            email='john.doe@test.mail',
+            password='testPass123'
+        )
+        # self.item = Product.objects.create(
+        #     title='Lighter',
+        #     decription='Just a basic lighter'
+        # )
+        self.order = Order.objects.create(
+            customer=self.customer
+        )
+
+    def test_shipment_email(self):
+        self.assertEqual(self.shipment.email, 'test@mail.com')
+
+    def test_shipment_names(self):
+        self.assertEqual(self.shipment.first_name, 'John')
+        self.assertEqual(self.shipment.last_name, 'Doe')
+
+    def test_shipment_address(self):
+        self.assertEqual(self.shipment.address, '1337 Leet Street')
+
+    def test_shipment_post_code(self):
+        self.assertEqual(self.shipment.post_code, '12345')
+
+    def test_shipment_state(self):
+        self.assertEqual(self.shipment.state, 'Moon Sector 17')
+
+    def test_shipment_city(self):
+        self.assertEqual(self.shipment.city, 'Alexandria')
+
+    def test_shipment_contact_number(self):
+        self.assertEqual(self.shipment.contact_number, '+133755775577')
+
+    def test_shipment_method(self):
+        # Shipment.MAIL by default
+        self.assertEqual(self.shipment.shipping_method, 'ML')
+
+        self.shipment.shipping_method = Shipment.JEFF_BEZOS
+        self.assertEqual(self.shipment.shipping_method, 'JB')
+
+    def test_shipment_order_add(self):
+        self.shipment.order = self.order
+        self.assertTrue(self.shipment.order)
+        self.assertEqual(self.shipment.order.customer.username, 'JohnDoe')
