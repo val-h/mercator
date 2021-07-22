@@ -149,4 +149,4 @@ class OrderTests(TestCase):
 
 class ShipmentTests(TestCase):
     def setUp(self):
-
+        pass

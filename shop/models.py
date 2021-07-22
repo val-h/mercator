@@ -71,10 +71,15 @@ class Shipment(models.Model):
     customer = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
+        default=None,
+        blank=True,
         related_name='shipments')
+        # Possibly move to Foreign, orders may have more than 1 shipment
     order = models.OneToOneField(
         Order,
         on_delete=models.PROTECT,
+        default=None,
+        blank=True,
         related_name='shipment')
     email = models.EmailField(max_length=254)
     first_name = models.CharField(max_length=80)
