@@ -129,3 +129,20 @@ class Shipment(models.Model):
 
     def __str__(self):
         return f'ID: {self.id}, Order: {self.order}'
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='cart')
+    items = models.ManyToManyField(
+        Product,
+        blank=True,
+        related_name='in_carts')
+
+    def clear(self):
+        self.items.clear()
+
+    def __str__(self):
+        return f'{self.user}\'s Cart'

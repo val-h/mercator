@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 # from PIL import Image as pil_Image
 # import io
 
-from .models import Product, Image, Order, Shipment, Category
+from .models import Product, Image, Order, Shipment, Category, Cart
 
 
 User = get_user_model()
@@ -218,3 +218,45 @@ class ShipmentTests(TestCase):
         self.shipment.order = self.order
         self.assertTrue(self.shipment.order)
         self.assertEqual(self.shipment.order.customer.username, 'JohnDoe')
+
+
+class CartTests(TestCase):
+    def setUp(self):
+        self.customer = User.objects.create(
+            username='test',
+            password='testPass123',
+            email='user@cart.test'
+        )
+        self.item1 = Product.objects.create(
+            title = 'Smartphone',
+            description='Just a regular smartphone'
+        )
+        self.item2 = Product.objects.create(
+            title='Flask',
+            description='Pretty cool flask for water.'
+        )
+        self.cart = Cart.objects.create(
+            user=self.customer
+        )
+
+    def test_cart_user(self):
+        self.assertTrue(self.cart.user)
+        self.assertEqual(self.cart.user.username, 'test')
+
+    def test_cart_item_add(self):
+        self.assertFalse(self.cart.items.first())
+        self.cart.items.add(self.item1)
+        self.assertEqual(self.cart.items.first().title, 'Smartphone')
+        self.assertTrue(self.cart.items.first())
+
+    def test_cart_item_remove(self):
+        self.cart.items.add(self.item1)
+        self.assertTrue(self.cart.items.first())
+        self.cart.items.remove(self.item1)
+        self.assertFalse(self.cart.items.first())
+
+    def test_cart_clear(self):
+        self.cart.items.add(self.item1, self.item2)
+        self.assertTrue(self.cart.items.all())
+        self.cart.clear()
+        self.assertFalse(self.cart.items.all())
