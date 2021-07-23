@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 # from PIL import Image as pil_Image
 # import io
 
-from .models import Product, Image, Order, Shipment
+from .models import Product, Image, Order, Shipment, Category
 
 
 User = get_user_model()
@@ -13,11 +13,16 @@ User = get_user_model()
 
 class ProductTests(TestCase):
     def setUp(self):
+        self.book_category = Category.objects.create(
+            name='Books',
+            description='A place to find any book you want.'
+        )
         self.book_product = Product.objects.create(
             title='Lord of the Rings:The Fellowship of the Ring',
             description="""A meek Hobbit from the Shire and eight companions 
             set out on a journey to destroy the powerful One Ring and save 
             Middle-earth from the Dark Lord Sauron.""",
+            category=self.book_category,
             price=29.99,
             quantity=75
         ) # Add more images to this product
@@ -66,6 +71,12 @@ class ProductTests(TestCase):
     def test_product_quantity(self):
         self.assertEqual(self.book_product.quantity, 75)
         self.assertEqual(self.flower_product.quantity, 1001)
+
+    def test_product_category(self):
+        self.assertEqual(self.book_product.category.name, 'Books')
+        self.assertEqual(
+            self.book_product.category.description,
+            'A place to find any book you want.')
 
 
 # This might be unnecessary but i will keep it if Image model

@@ -5,6 +5,14 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=60)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -13,6 +21,12 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
     quantity = models.IntegerField(default=1)
     # Category foreign key
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='products')
     # Reviews, related name
     # Specifications -> table like representation
     # Shop foreign key
@@ -66,6 +80,9 @@ class Order(models.Model):
         default=None,
         related_name='orders')
 
+    def __str__(self):
+        return f'ID: {self.id}, Customer: {self.customer}'
+
 
 class Shipment(models.Model):
     # might as well be useless, the customer is within the order ...
@@ -110,3 +127,5 @@ class Shipment(models.Model):
         choices=SHIPPING_METHODS,
         default=MAIL)
 
+    def __str__(self):
+        return f'ID: {self.id}, Order: {self.order}'
