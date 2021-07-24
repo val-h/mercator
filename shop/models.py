@@ -95,15 +95,6 @@ class Order(models.Model):
 
 
 class Shipment(models.Model):
-    # might as well be useless, the customer is within the order ...
-    # DELETE
-    customer = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        default=None,
-        null=True,
-        blank=True,
-        related_name='shipments')
     # Possibly move to Foreign, orders may have more than 1 shipment
     order = models.OneToOneField(
         Order,

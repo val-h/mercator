@@ -224,9 +224,15 @@ class ShipmentTests(TestCase):
     def test_shipment_method(self):
         # Shipment.MAIL by default
         self.assertEqual(self.shipment.shipping_method, 'ML')
+        self.assertEqual(
+            self.shipment.get_shipping_method_display(),
+            'Mail')
 
         self.shipment.shipping_method = Shipment.JEFF_BEZOS
         self.assertEqual(self.shipment.shipping_method, 'JB')
+        self.assertEqual(
+            self.shipment.get_shipping_method_display(),
+            'Jeff Bezos with a bycicle (cheapest)')
 
     def test_shipment_order_add(self):
         self.shipment.order = self.order
