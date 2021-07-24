@@ -54,8 +54,9 @@ class Image(models.Model):
         Product,
         on_delete=models.CASCADE,
         related_name='images')
-    image = models.ImageField(upload_to='images/',
-    default='images/default_product.png')
+    image = models.ImageField(
+        upload_to='images/',
+        default='images/default_product.png')
 
     def __str__(self):
         return f'{self.product.title}\'s image'
@@ -165,3 +166,49 @@ class Review(models.Model):
 
     def __str__(self):
         return f'Review on {self.product} by {self.user}'
+
+
+class ShopStyle(models.Model):
+    logo = models.ImageField(
+        upload_to='images/shops/',
+        default='images/shops/shop_default_logo.png')
+    
+    COLOR = 'C'
+    IMAGE = 'I'
+    # GIF = 'G' ^ goes into image
+    BACKGROUND_STYLES = [
+        (COLOR, 'Color'),
+        (IMAGE, 'Image'),
+        # (GIF, 'Gif')
+    ]
+    background_style = models.CharField(
+        max_length=3,
+        choices=BACKGROUND_STYLES,
+        default=COLOR)
+
+    # Create custom field that validates for colors in rgb format
+    first_theme_color = models.CharField(max_length=7, default='#f8f9fa')
+    second_theme_color = models.CharField(max_length=7, default='#f6bd60')
+    third_theme_color = models.CharField(max_length=7, default='#343a40')
+
+    background_color = models.CharField(max_length=7, default='#000000')
+    background_image = models.ImageField(
+        upload_to='images/shops/',
+        default=None)
+
+
+class Shop(models.Model):
+    owner = models.OneToOneField(
+        User,
+        on_delete=models.PROTECT,
+        related_name='shop'
+    )
+    date_created = models.DateTimeField(auto_now_add=True)
+    # Will be used for marketing
+    points = models.IntegerField()
+
+    style = models.OneToOneField(
+        ShopStyle,
+        on_delete=models.CASCADE,
+        default=None)
+    # analytics
