@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 # from PIL import Image as pil_Image
 # import io
 
-from .models import Product, Image, Order, Shipment, Category, Cart, Tag
+from .models import Product, Image, Order, Shipment, Category, Cart, Tag, Review
 
 
 User = get_user_model()
@@ -274,3 +274,32 @@ class CartTests(TestCase):
         self.assertTrue(self.cart.items.all())
         self.cart.clear()
         self.assertFalse(self.cart.items.all())
+
+
+class ReviewTests(TestCase):
+    def setUp(self):
+        self.customer = User.objects.create(
+            username='test',
+            password='testPass123',
+            email='test@mail.com'
+        )
+        self.product = Product.objects.create(
+            title='Notebook',
+            description='Regular notebook in A5 format.',
+        )
+        self.review = Review.objects.create(
+            product=self.product,
+            user=self.customer,
+            text="10/10 would buy again!"
+        )
+
+    def test_review_product_relation(self):
+        self.assertTrue(self.product.reviews)
+        self.assertEqual(len(self.product.reviews.all()), 1)
+
+    def test_review_user_relation(self):
+        self.assertTrue(self.customer.reviews)
+        self.assertEqual(len(self.customer.reviews.all()), 1)
+
+    def test_review_text(self):
+        self.assertEqual(self.review.text, "10/10 would buy again!")

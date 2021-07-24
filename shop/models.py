@@ -37,7 +37,7 @@ class Product(models.Model):
         blank=True,
         related_name='products'
     )
-    # Reviews, related name
+    date_created = models.DateTimeField(auto_now_add=True)
     # Specifications -> table like representation
     # Shop foreign key
     times_bought = models.IntegerField(default=0)
@@ -156,3 +156,21 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.user}\'s Cart'
+
+
+class Review(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    date = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+
+    def __str__(self):
+        return f'Review on {self.product} by {self.user}'
