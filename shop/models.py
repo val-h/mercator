@@ -42,7 +42,11 @@ class Product(models.Model):
     # Specifications -> table like representation
     times_bought = models.IntegerField(default=0)
     total_views = models.IntegerField(default=0)
-    # shop = foreignKey/onetoone
+    shop = models.ForeignKey(
+        'Shop',
+        on_delete=models.CASCADE,
+        related_name='products'    
+    )
 
     def __str__(self):
         return str(self.title)
@@ -90,6 +94,11 @@ class Order(models.Model):
         User,
         on_delete=models.PROTECT,
         default=None,
+        related_name='orders'
+    )
+    shop = models.ForeignKey(
+        'Shop',
+        on_delete=models.PROTECT,
         related_name='orders'
     )
 
@@ -174,6 +183,24 @@ class Review(models.Model):
         return f'Review on {self.product} by {self.user}'
 
 
+class Visit(models.Model):
+    """
+    Helper model for the analytics of every shop.
+    
+    Provides just the basic 
+    """
+    date = models.DateTimeField(auto_now_add=True)
+
+    PRODUCT = 'P'
+    SHOP = 'S'
+    MODEL_CHOICES = [
+        (PRODUCT, 'Product'),
+        (SHOP, 'Shop')
+    ]
+    model = models.CharField(max_length=1, choices=MODEL_CHOICES)
+    model_id = models.IntegerField()
+
+
 class ShopStyle(models.Model):
     logo = models.ImageField(
         upload_to='images/shops/',
@@ -205,6 +232,24 @@ class ShopStyle(models.Model):
     )
 
 
+class ShopAnalytics(models.Model):
+    total_products_sold = models.IntegerField(default=0)
+    total_orders = models.IntegerField(default=0)
+
+    # Just a temporary showcase solution 
+    def shop_visits(self):
+        return Visit.objects.filter(
+            model_id=self.shop.id,
+            model=Visit.SHOP
+        )
+
+    def product_visits(self, id):
+        return Visit.objects.filter(
+            model_id=id,
+            model=Visit.PRODUCT
+        )
+
+
 class Shop(models.Model):
     owner = models.OneToOneField(
         User,
@@ -221,7 +266,9 @@ class Shop(models.Model):
         null=True,
         default=None
     )
-    # analytics
-
-    # TODO, configure the product, order and shipment models
-    # to include the shop model in one way or another
+    analytics = models.OneToOneField(
+        ShopAnalytics,
+        on_delete=models.CASCADE,
+        null=True,
+        default=None
+    )
