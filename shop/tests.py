@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 # from PIL import Image as pil_Image
 # import io
 
-from .models import Product, Image, Order, Shipment, Category, Cart
+from .models import Product, Image, Order, Shipment, Category, Cart, Tag
 
 
 User = get_user_model()
@@ -17,6 +17,8 @@ class ProductTests(TestCase):
             name='Books',
             description='A place to find any book you want.'
         )
+        self.book_tag = Tag.objects.create(name='book')
+        self.reading_tag = Tag.objects.create(name='reading')
         self.book_product = Product.objects.create(
             title='Lord of the Rings:The Fellowship of the Ring',
             description="""A meek Hobbit from the Shire and eight companions 
@@ -77,6 +79,18 @@ class ProductTests(TestCase):
         self.assertEqual(
             self.book_product.category.description,
             'A place to find any book you want.')
+
+    def test_product_tag_add(self):
+        self.assertFalse(self.book_product.tags.all())
+        self.book_product.tags.add(self.book_tag, self.reading_tag)
+        self.assertEqual(len(self.book_product.tags.all()), 2)
+
+    def test_product_tag_remove(self):
+        self.assertFalse(self.book_product.tags.all())
+        self.book_product.tags.add(self.book_tag)
+        self.assertEqual(self.book_product.tags.first().name, 'book')
+        self.book_product.tags.remove(self.book_tag)
+        self.assertFalse(self.book_product.tags.first())
 
 
 # This might be unnecessary but i will keep it if Image model

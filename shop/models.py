@@ -13,20 +13,30 @@ class Category(models.Model):
         return self.name
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     # Images will be a sequenceof seperate models
-    # Tags m2m relation
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
     quantity = models.IntegerField(default=1)
-    # Category foreign key
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
         null=True,
         blank=True,
         related_name='products')
+    tags = models.ManyToManyField(
+        Tag,
+        blank=True,
+        related_name='products'
+    )
     # Reviews, related name
     # Specifications -> table like representation
     # Shop foreign key
