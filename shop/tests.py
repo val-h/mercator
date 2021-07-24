@@ -5,7 +5,18 @@ from django.contrib.auth import get_user_model
 # from PIL import Image as pil_Image
 # import io
 
-from .models import Product, Image, Order, Shipment, Category, Cart, Tag, Review
+from .models import (
+    Product,
+    Image,
+    Order,
+    Shipment,
+    Category,
+    Cart,
+    Tag,
+    Review,
+    Shop,
+    ShopStyle,
+)
 
 
 User = get_user_model()
@@ -27,7 +38,7 @@ class ProductTests(TestCase):
             category=self.book_category,
             price=29.99,
             quantity=75
-        ) # Add more images to this product
+        )  # Add more images to this product
         self.book_cover = Image.objects.create(
             product=self.book_product,
             # I can't load a custom image from code, yet
@@ -42,11 +53,12 @@ class ProductTests(TestCase):
         self.flower_photo = Image.objects.create(
             product=self.flower_product,
         )
-    
+
     def test_product_title(self):
         self.assertEqual(
             self.book_product.title,
-            'Lord of the Rings:The Fellowship of the Ring')
+            'Lord of the Rings:The Fellowship of the Ring'
+        )
         self.assertEqual(self.flower_product.title, 'Rose')
 
     def test_product_description(self):
@@ -54,16 +66,19 @@ class ProductTests(TestCase):
             self.book_product.description,
             """A meek Hobbit from the Shire and eight companions 
             set out on a journey to destroy the powerful One Ring and save 
-            Middle-earth from the Dark Lord Sauron.""")
+            Middle-earth from the Dark Lord Sauron."""
+        )
         self.assertEqual(
             self.flower_product.description,
-            'A beautiful red rose.')
+            'A beautiful red rose.'
+        )
 
     def test_product_image(self):
         self.assertTrue(self.book_product.images.first().image)
         self.assertEqual(
             self.book_product.images.first().image.url,
-            '/media/images/default_product.png')
+            '/media/images/default_product.png'
+        )
         self.assertTrue(self.flower_product.images.first().image)
 
     def test_product_price(self):
@@ -78,7 +93,8 @@ class ProductTests(TestCase):
         self.assertEqual(self.book_product.category.name, 'Books')
         self.assertEqual(
             self.book_product.category.description,
-            'A place to find any book you want.')
+            'A place to find any book you want.'
+        )
 
     def test_product_tag_add(self):
         self.assertFalse(self.book_product.tags.all())
@@ -117,7 +133,7 @@ class ImageTests(TestCase):
             # image=pil_Image.open(image_file)
             # image=pil_Image.open(f'{settings.MEDIA_ROOT}/images/LotR_FotR.jpg')
         )
-    
+
     def test_image_product(self):
         self.assertEqual(self.book_image.product.title, 'LotR')
         self.assertEqual(self.book_image.product.quantity, 1)
@@ -127,7 +143,8 @@ class ImageTests(TestCase):
         self.assertTrue(self.book_image.image)
         self.assertEqual(
             self.book_image.image.url,
-            '/media/images/default_product.png')
+            '/media/images/default_product.png'
+        )
 
 
 class OrderTests(TestCase):
@@ -161,14 +178,14 @@ class OrderTests(TestCase):
         self.assertEqual(self.order.items.last().title, 'Random Shirt')
 
     def test_order_status_change(self):
-        self.assertEqual(self.order.status, 'PL') # Order.PLACED by default
+        self.assertEqual(self.order.status, 'PL')  # Order.PLACED by default
         self.order.status = Order.PROCESSING
         self.assertEqual(self.order.status, 'PR')
         self.order.status = Order.COMPLETE
         self.assertEqual(self.order.status, 'CO')
-        self.order.status =  Order.DELIVERED
+        self.order.status = Order.DELIVERED
         self.assertEqual(self.order.status, 'DE')
-        self.order.status =  Order.CANCELED
+        self.order.status = Order.CANCELED
         self.assertEqual(self.order.status, 'CA')
 
 
@@ -226,7 +243,8 @@ class ShipmentTests(TestCase):
         self.assertEqual(self.shipment.shipping_method, 'ML')
         self.assertEqual(
             self.shipment.get_shipping_method_display(),
-            'Mail')
+            'Mail'
+        )
 
         self.shipment.shipping_method = Shipment.JEFF_BEZOS
         self.assertEqual(self.shipment.shipping_method, 'JB')
@@ -248,7 +266,7 @@ class CartTests(TestCase):
             email='user@cart.test'
         )
         self.item1 = Product.objects.create(
-            title = 'Smartphone',
+            title='Smartphone',
             description='Just a regular smartphone'
         )
         self.item2 = Product.objects.create(
@@ -309,3 +327,55 @@ class ReviewTests(TestCase):
 
     def test_review_text(self):
         self.assertEqual(self.review.text, "10/10 would buy again!")
+
+
+class ShopTests(TestCase):
+    def setUp(self):
+        self.merchant = User.objects.create(
+            username='mercator',
+            password='testPass123',
+            email='test@mail.com'
+        )
+        self.shop = Shop.objects.create(
+            owner=self.merchant,
+            points=7
+        )
+
+    def test_shop_owner(self):
+        self.assertTrue(self.shop.owner)
+        self.assertEqual(self.shop.owner.username, 'mercator')
+
+    def test_shop_points(self):
+        self.assertEqual(self.shop.points, 7)
+
+
+class ShopStyleTests(TestCase):
+    def setUp(self):
+        self.shop_style = ShopStyle.objects.create()
+
+    def test_shop_style_logo(self):
+        self.assertEqual(
+            self.shop_style.logo.url,
+            '/media/images/shops/shop_default_logo.png'
+        )
+
+    def test_shop_style_background_style(self):
+        self.assertEqual(self.shop_style.background_style, 'C')
+        self.assertEqual(
+            self.shop_style.get_background_style_display(),
+            'Color'
+        )
+        self.shop_style.background_style = ShopStyle.IMAGE
+        self.assertEqual(self.shop_style.background_style, 'I')
+        self.assertEqual(
+            self.shop_style.get_background_style_display(),
+            'Image'
+        )
+
+    def test_shop_style_theme_colors(self):
+        self.assertEqual(self.shop_style.first_theme_color, '#f8f9fa')
+        self.assertEqual(self.shop_style.second_theme_color, '#f6bd60')
+        self.assertEqual(self.shop_style.third_theme_color, '#343a40')
+
+        self.shop_style.first_theme_color = '#000000'
+        self.assertEqual(self.shop_style.first_theme_color, '#000000')

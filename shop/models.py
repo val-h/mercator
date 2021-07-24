@@ -31,7 +31,8 @@ class Product(models.Model):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
-        related_name='products')
+        related_name='products'
+    )
     tags = models.ManyToManyField(
         Tag,
         blank=True,
@@ -39,7 +40,6 @@ class Product(models.Model):
     )
     date_created = models.DateTimeField(auto_now_add=True)
     # Specifications -> table like representation
-    # Shop foreign key
     times_bought = models.IntegerField(default=0)
     total_views = models.IntegerField(default=0)
     # shop = foreignKey/onetoone
@@ -66,7 +66,8 @@ class Order(models.Model):
     items = models.ManyToManyField(
         Product,
         blank=True,
-        related_name='all_orders')
+        related_name='all_orders'
+    )
 
     PLACED = 'PL'
     CANCELED = 'CA'
@@ -83,13 +84,14 @@ class Order(models.Model):
         max_length=2,
         choices=ORDER_OPTIONS,
         default=PLACED
-        )
+    )
     date_ordered = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         default=None,
-        related_name='orders')
+        related_name='orders'
+    )
 
     def __str__(self):
         return f'ID: {self.id}, Customer: {self.customer}'
@@ -103,7 +105,8 @@ class Shipment(models.Model):
         default=None,
         null=True,
         blank=True,
-        related_name='shipment')
+        related_name='shipment'
+    )
     email = models.EmailField(max_length=254)
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
@@ -127,7 +130,8 @@ class Shipment(models.Model):
     shipping_method = models.CharField(
         max_length=2,
         choices=SHIPPING_METHODS,
-        default=MAIL)
+        default=MAIL
+    )
 
     def __str__(self):
         return f'ID: {self.id}, Order: {self.order}'
@@ -137,11 +141,13 @@ class Cart(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='cart')
+        related_name='cart'
+    )
     items = models.ManyToManyField(
         Product,
         blank=True,
-        related_name='in_carts')
+        related_name='in_carts'
+    )
 
     def clear(self):
         self.items.clear()
@@ -172,7 +178,7 @@ class ShopStyle(models.Model):
     logo = models.ImageField(
         upload_to='images/shops/',
         default='images/shops/shop_default_logo.png')
-    
+
     COLOR = 'C'
     IMAGE = 'I'
     # GIF = 'G' ^ goes into image
@@ -182,9 +188,10 @@ class ShopStyle(models.Model):
         # (GIF, 'Gif')
     ]
     background_style = models.CharField(
-        max_length=3,
+        max_length=1,
         choices=BACKGROUND_STYLES,
-        default=COLOR)
+        default=COLOR
+    )
 
     # Create custom field that validates for colors in rgb format
     first_theme_color = models.CharField(max_length=7, default='#f8f9fa')
@@ -194,7 +201,8 @@ class ShopStyle(models.Model):
     background_color = models.CharField(max_length=7, default='#000000')
     background_image = models.ImageField(
         upload_to='images/shops/',
-        default=None)
+        default=None
+    )
 
 
 class Shop(models.Model):
@@ -205,10 +213,15 @@ class Shop(models.Model):
     )
     date_created = models.DateTimeField(auto_now_add=True)
     # Will be used for marketing
-    points = models.IntegerField()
+    points = models.IntegerField(default=0)
 
     style = models.OneToOneField(
         ShopStyle,
         on_delete=models.CASCADE,
-        default=None)
+        null=True,
+        default=None
+    )
     # analytics
+
+    # TODO, configure the product, order and shipment models
+    # to include the shop model in one way or another
