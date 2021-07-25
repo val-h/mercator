@@ -217,8 +217,11 @@ class ShopAnalytics(models.Model):
         query = self.visits.filter(model=Visit.SHOP)
         return query
 
-    def product_visits(self, id):
-        query = self.visits.filter(model=Visit.PRODUCT)
+    def product_visits(self, id=None):
+        if not id:
+            query = self.visits.filter(model=Visit.PRODUCT)
+        elif id:
+            query = self.visits.filter(model=Visit.PRODUCT, model_id=id)
         return query
 
 

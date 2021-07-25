@@ -16,6 +16,8 @@ from .models import (
     Review,
     Shop,
     ShopStyle,
+    ShopAnalytics,
+    Visit
 )
 
 
@@ -44,10 +46,12 @@ def _create_merchant():
     )
     return merchant
 
-def _create_shop(owner: User, points=0) -> Shop:
+def _create_shop(owner: User, points=0, analytics=None, style=None) -> Shop:
     shop = Shop.objects.create(
         owner=owner,
-        points=points
+        points=points,
+        analytics=analytics,
+        style=style
     )
     return shop
 
@@ -417,6 +421,71 @@ class ShopStyleTests(TestCase):
         self.shop_style.first_theme_color = '#000000'
         self.assertEqual(self.shop_style.first_theme_color, '#000000')
 
-# Analytics tests
 
-# Visit Tests, I really don't know how this will be done
+class AnalyticsTests(TestCase):
+    def setUp(self):
+        # analytics instance for the visits
+        self.analytics = ShopAnalytics.objects.create()
+
+        # Create a test shop and product
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(self.merchant, analytics=self.analytics)
+        self.book_product = Product.objects.create(
+            title='SPQR',
+            description='Mary Beard\'s take on the history of Rome.',
+            shop=self.shop
+        )
+        self.flower_product = Product.objects.create(
+            title='White Rose',
+            description='A beautiful White Rose.',
+            shop=self.shop
+        )
+
+    def _create_visit(self, model: Visit.MODEL_CHOICES, model_id: int):
+        visit = Visit.objects.create(
+            shop_analytics = self.shop.analytics,
+            model=model,
+            model_id=model_id
+        )
+        return visit
+
+    def test_create_shop_visit(self):
+        # Simulate a hit on the page
+        visit = self._create_visit(Visit.SHOP, self.shop.id)
+        self.assertTrue(visit)
+        self.assertEqual(len(self.shop.analytics.shop_visits()), 1)
+
+    def test_create_product_visit(self):
+        for i in range(17):
+            visit = self._create_visit(Visit.PRODUCT, self.book_product.id)
+        self.assertTrue(visit)
+        self.assertEqual(len(self.shop.analytics.product_visits()), 17)
+
+    def test_multiple_product_visits(self):
+        for i in range(7):
+            self._create_visit(Visit.PRODUCT, self.book_product.id)
+        for i in range(77):
+            self._create_visit(Visit.PRODUCT, self.flower_product.id)
+        self.assertEqual(len(self.shop.analytics.product_visits()), 84)
+        self.assertEqual(len(self.shop.analytics.product_visits(
+            id=self.book_product.id
+        )), 7)
+        self.assertEqual(len(self.shop.analytics.product_visits(
+            id=self.flower_product.id
+        )), 77)
+
+    def test_complete_shop_and_product_visits(self):
+        for i in range(7):
+            self._create_visit(Visit.SHOP, self.shop.id)
+        for i in range(77):
+            self._create_visit(Visit.PRODUCT, self.book_product.id)
+        for i in range(777):
+            self._create_visit(Visit.PRODUCT, self.flower_product.id)
+        self.assertEqual(len(self.shop.analytics.visits.all()), 861)
+        self.assertEqual(len(self.shop.analytics.shop_visits()), 7)
+        self.assertEqual(len(self.shop.analytics.product_visits(
+            id=self.book_product.id
+        )), 77)
+        self.assertEqual(len(self.shop.analytics.product_visits(
+            id=self.flower_product.id
+        )), 777)
