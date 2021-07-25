@@ -190,6 +190,13 @@ class Visit(models.Model):
     Provides just the basic 
     """
     date = models.DateTimeField(auto_now_add=True)
+    shop_analytics = models.ForeignKey(
+        'ShopAnalytics',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='visits'
+    )
 
     PRODUCT = 'P'
     SHOP = 'S'
@@ -199,6 +206,20 @@ class Visit(models.Model):
     ]
     model = models.CharField(max_length=1, choices=MODEL_CHOICES)
     model_id = models.IntegerField()
+
+
+class ShopAnalytics(models.Model):
+    total_products_sold = models.IntegerField(default=0)
+    total_orders = models.IntegerField(default=0)
+
+    # Just a temporary showcase solution 
+    def shop_visits(self):
+        query = self.visits.filter(model=Visit.SHOP)
+        return query
+
+    def product_visits(self, id):
+        query = self.visits.filter(model=Visit.PRODUCT)
+        return query
 
 
 class ShopStyle(models.Model):
@@ -230,24 +251,6 @@ class ShopStyle(models.Model):
         upload_to='images/shops/',
         default=None
     )
-
-
-class ShopAnalytics(models.Model):
-    total_products_sold = models.IntegerField(default=0)
-    total_orders = models.IntegerField(default=0)
-
-    # Just a temporary showcase solution 
-    def shop_visits(self):
-        return Visit.objects.filter(
-            model_id=self.shop.id,
-            model=Visit.SHOP
-        )
-
-    def product_visits(self, id):
-        return Visit.objects.filter(
-            model_id=id,
-            model=Visit.PRODUCT
-        )
 
 
 class Shop(models.Model):
