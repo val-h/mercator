@@ -22,8 +22,40 @@ from .models import (
 User = get_user_model()
 
 
+def _create_customer(
+        username='test',
+        password='testPass123',
+        email='test@user.xyz'
+    ):
+    
+    customer = User.objects.create(
+        username=username,
+        password=password,
+        email=email
+    )
+    return customer
+
+def _create_merchant():
+    merchant = User.objects.create(
+        username='mercator',
+        password='testPass123',
+        email='mercator@mail.com',
+        account_type=User.MERCHANT
+    )
+    return merchant
+
+def _create_shop(owner: User, points=0) -> Shop:
+    shop = Shop.objects.create(
+        owner=owner,
+        points=points
+    )
+    return shop
+
+
 class ProductTests(TestCase):
     def setUp(self):
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(self.merchant)
         self.book_category = Category.objects.create(
             name='Books',
             description='A place to find any book you want.'
@@ -37,7 +69,8 @@ class ProductTests(TestCase):
             Middle-earth from the Dark Lord Sauron.""",
             category=self.book_category,
             price=29.99,
-            quantity=75
+            quantity=75,
+            shop=self.shop
         )  # Add more images to this product
         self.book_cover = Image.objects.create(
             product=self.book_product,
@@ -48,7 +81,8 @@ class ProductTests(TestCase):
             title='Rose',
             description='A beautiful red rose.',
             price=3.50,
-            quantity=1001
+            quantity=1001,
+            shop=self.shop
         )
         self.flower_photo = Image.objects.create(
             product=self.flower_product,
@@ -108,14 +142,23 @@ class ProductTests(TestCase):
         self.book_product.tags.remove(self.book_tag)
         self.assertFalse(self.book_product.tags.first())
 
+    def test_product_shop(self):
+        self.assertTrue(self.book_product.shop)
+        self.assertTrue(self.flower_product.shop)
+        self.assertEqual(self.book_product.shop.points, 0)
+        self.assertEqual(self.book_product.shop.owner.username, 'mercator')
+
 
 # This might be unnecessary but i will keep it if Image model
 # needs some extentions
 class ImageTests(TestCase):
     def setUp(self):
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(self.merchant)
         self.product = Product.objects.create(
             title='LotR',
             description='Test description for Image.',
+            shop=self.shop
         )
 
         # image_file = io.BytesIO(f'{settings.MEDIA_ROOT}/images/LotR_FotR.jpg')
@@ -150,21 +193,22 @@ class ImageTests(TestCase):
 class OrderTests(TestCase):
     def setUp(self):
         # Create a sample user
-        self.customer = User.objects.create(
-            username='test',
-            password='testPass123',
-            email='test@user.xyz'
-        )
+        self.customer = _create_customer()
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(self.merchant)
         self.item1 = Product.objects.create(
             title='Random Book',
-            description='Random Book Description'
+            description='Random Book Description',
+            shop=self.shop
         )
         self.item2 = Product.objects.create(
             title='Random Shirt',
-            description='Random Shirt Description'
+            description='Random Shirt Description',
+            shop=self.shop
         )
         self.order = Order.objects.create(
             customer=self.customer,
+            shop=self.shop
         )
 
     def test_order_user(self):
@@ -187,6 +231,10 @@ class OrderTests(TestCase):
         self.assertEqual(self.order.status, 'DE')
         self.order.status = Order.CANCELED
         self.assertEqual(self.order.status, 'CA')
+    
+    def test_order_shop(self):
+        self.assertTrue(self.order.shop)
+        self.assertEqual(self.order.shop.owner.username, 'mercator')
 
 
 class ShipmentTests(TestCase):
@@ -203,17 +251,12 @@ class ShipmentTests(TestCase):
         )
 
         # helper models
-        self.customer = User.objects.create(
-            username='JohnDoe',
-            email='john.doe@test.mail',
-            password='testPass123'
-        )
-        # self.item = Product.objects.create(
-        #     title='Lighter',
-        #     decription='Just a basic lighter'
-        # )
+        self.customer = _create_customer(username='JohnDoe')
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(self.merchant)
         self.order = Order.objects.create(
-            customer=self.customer
+            customer=self.customer,
+            shop=self.shop
         )
 
     def test_shipment_email(self):
@@ -255,23 +298,24 @@ class ShipmentTests(TestCase):
     def test_shipment_order_add(self):
         self.shipment.order = self.order
         self.assertTrue(self.shipment.order)
+        self.assertTrue(self.shipment.order.shop)
         self.assertEqual(self.shipment.order.customer.username, 'JohnDoe')
 
 
 class CartTests(TestCase):
     def setUp(self):
-        self.customer = User.objects.create(
-            username='test',
-            password='testPass123',
-            email='user@cart.test'
-        )
+        self.customer = _create_customer()
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(owner=self.merchant)
         self.item1 = Product.objects.create(
             title='Smartphone',
-            description='Just a regular smartphone'
+            description='Just a regular smartphone',
+            shop=self.shop
         )
         self.item2 = Product.objects.create(
             title='Flask',
-            description='Pretty cool flask for water.'
+            description='Pretty cool flask for water.',
+            shop=self.shop
         )
         self.cart = Cart.objects.create(
             user=self.customer
@@ -302,14 +346,13 @@ class CartTests(TestCase):
 
 class ReviewTests(TestCase):
     def setUp(self):
-        self.customer = User.objects.create(
-            username='test',
-            password='testPass123',
-            email='test@mail.com'
-        )
+        self.customer = _create_customer()
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(owner=self.merchant)
         self.product = Product.objects.create(
             title='Notebook',
             description='Regular notebook in A5 format.',
+            shop=self.shop
         )
         self.review = Review.objects.create(
             product=self.product,
@@ -331,18 +374,12 @@ class ReviewTests(TestCase):
 
 class ShopTests(TestCase):
     def setUp(self):
-        self.merchant = User.objects.create(
-            username='mercator',
-            password='testPass123',
-            email='test@mail.com'
-        )
-        self.shop = Shop.objects.create(
-            owner=self.merchant,
-            points=7
-        )
+        self.merchant = _create_merchant()
+        self.shop = _create_shop(self.merchant, points=7)
 
     def test_shop_owner(self):
         self.assertTrue(self.shop.owner)
+        self.assertEqual(self.shop.owner.account_type, User.MERCHANT)
         self.assertEqual(self.shop.owner.username, 'mercator')
 
     def test_shop_points(self):
@@ -379,3 +416,7 @@ class ShopStyleTests(TestCase):
 
         self.shop_style.first_theme_color = '#000000'
         self.assertEqual(self.shop_style.first_theme_color, '#000000')
+
+# Analytics tests
+
+# Visit Tests, I really don't know how this will be done
