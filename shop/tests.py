@@ -493,3 +493,15 @@ class AnalyticsTests(TestCase):
         self.assertEqual(len(self.shop.analytics.product_visits(
             id=self.flower_product.id
         )), 777)
+
+    def test_shop_model_visited_method(self):
+        for visit in range(7):
+            self.shop.visited()
+        self.assertEqual(self.shop.analytics.visits.count(), 7)
+
+    def test_product_model_visited_method(self):
+        for visit in range(77):
+            self.book_product.visited()
+        self.assertEqual(self.shop.analytics.product_visits(
+            id=self.book_product.id
+        ).count(), 77)

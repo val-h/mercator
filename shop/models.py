@@ -55,7 +55,7 @@ class Product(models.Model):
     def visited(self):
         Visit.objects.create(
             shop_analytics=self.shop.analytics,
-            model=Visit.SHOP,
+            model=Visit.PRODUCT,
             model_id=self.id
         )
 
