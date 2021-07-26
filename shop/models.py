@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from .signals import object_viewed
+# from .signals import object_viewed
 
 
 User = get_user_model()
@@ -53,7 +53,11 @@ class Product(models.Model):
         return str(self.title)
 
     def visited(self):
-        object_viewed.send(sender=self.__class__, instance=self)
+        Visit.objects.create(
+            shop_analytics=self.shop.analytics,
+            model=Visit.SHOP,
+            model_id=self.id
+        )
 
 
 # To be used only with the Product model
@@ -289,4 +293,8 @@ class Shop(models.Model):
         return f'{self.owner}\'s shop'
 
     def visited(self):
-        object_viewed.send(sender=self.__class__, instance=self)
+        Visit.objects.create(
+            shop_analytics=self.analytics,
+            model=Visit.SHOP,
+            model_id=self.id
+        )

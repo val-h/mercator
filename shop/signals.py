@@ -43,21 +43,23 @@ def _on_shop_deleted(sender, instance, **kwargs):
         instance.style.delete()
 
 
-@receiver(object_viewed, sender=Shop)
-def _on_shop_viewed(sender, instance, **kwargs):
-    if instance:
-        Visit.objects.create(
-            shop_analytics=instance.analytics,
-            model=Visit.SHOP,
-            model_id=instance.id
-        )
+# curcular import, these signals are probably not even needed
+# for this type of visit implementation
+# @receiver(object_viewed, sender=Shop)
+# def _on_shop_viewed(sender, instance, **kwargs):
+#     if instance:
+#         Visit.objects.create(
+#             shop_analytics=instance.analytics,
+#             model=Visit.SHOP,
+#             model_id=instance.id
+#         )
 
 
-@receiver(object_viewed, sender=Product)
-def _on_product_viewed(sender, instance, **kwargs):
-    if instance:
-        Visit.objects.create(
-            shop_analytics=instance.shop.analytics,
-            model=Visit.PRODUCT,
-            model_id=instance.id
-        )
+# @receiver(object_viewed, sender=Product)
+# def _on_product_viewed(sender, instance, **kwargs):
+#     if instance:
+#         Visit.objects.create(
+#             shop_analytics=instance.shop.analytics,
+#             model=Visit.PRODUCT,
+#             model_id=instance.id
+#         )
