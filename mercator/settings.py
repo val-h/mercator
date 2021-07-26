@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # My apps
     'users',
     'pages',
-    'shop'
+    'shop.apps.ShopConfig'
 ]
 
 MIDDLEWARE = [

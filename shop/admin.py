@@ -1,8 +1,18 @@
 from django.contrib import admin
 
-from .models import Product, Image, Order, Shipment, Review, Cart, Visit, Shop
+from .models import (
+    Product,
+    Image,
+    Order,
+    Shipment,
+    Review,
+    Cart,
+    Visit,
+    Shop,
+    ShopAnalytics,
+    ShopStyle
+)
 
-# Register your models here.
 admin.site.register(Product)
 admin.site.register(Image)
 admin.site.register(Order)
@@ -11,3 +21,5 @@ admin.site.register(Review)
 admin.site.register(Cart)
 admin.site.register(Visit)
 admin.site.register(Shop)
+admin.site.register(ShopAnalytics)
+admin.site.register(ShopStyle)

@@ -50,8 +50,6 @@ def _create_shop(owner: User, points=0, analytics=None, style=None) -> Shop:
     shop = Shop.objects.create(
         owner=owner,
         points=points,
-        analytics=analytics,
-        style=style
     )
     return shop
 
@@ -389,6 +387,12 @@ class ShopTests(TestCase):
     def test_shop_points(self):
         self.assertEqual(self.shop.points, 7)
 
+    # Created with signals
+    def test_shop_analytics(self):
+        self.assertTrue(self.shop.analytics)
+    def test_shop_style(self):
+        self.assertTrue(self.shop.style)
+
 
 class ShopStyleTests(TestCase):
     def setUp(self):
@@ -424,12 +428,12 @@ class ShopStyleTests(TestCase):
 
 class AnalyticsTests(TestCase):
     def setUp(self):
-        # analytics instance for the visits
-        self.analytics = ShopAnalytics.objects.create()
+        # analytics instance for the visits, obscolete with signals
+        # self.analytics = ShopAnalytics.objects.create()
 
         # Create a test shop and product
         self.merchant = _create_merchant()
-        self.shop = _create_shop(self.merchant, analytics=self.analytics)
+        self.shop = _create_shop(self.merchant)
         self.book_product = Product.objects.create(
             title='SPQR',
             description='Mary Beard\'s take on the history of Rome.',
