@@ -1,4 +1,5 @@
 from django.dispatch import receiver, Signal
+from django.contrib.auth import get_user_model
 from django.db.models.signals import (
     post_save,
     pre_delete
@@ -26,6 +27,8 @@ def _on_shop_create(sender, instance, created, **kwargs):
         style = ShopStyle.objects.create()
         instance.analytics = analytics
         instance.style = style
+        # Set the owner's account type to being a mercahnt
+        instance.owner.account_type = get_user_model().MERCHANT
         # print('Shop set up complete!')
 
 
