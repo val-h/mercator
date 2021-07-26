@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from .signals import object_viewed
 
 
 User = get_user_model()
@@ -50,6 +51,9 @@ class Product(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+    def visited(self):
+        object_viewed.send(sender=self.__class__, instance=self)
 
 
 # To be used only with the Product model
@@ -198,6 +202,8 @@ class Visit(models.Model):
         related_name='visits'
     )
 
+    # GenericForeginKey and ContentType are things that exist
+    # For future projects, look them up
     PRODUCT = 'P'
     SHOP = 'S'
     MODEL_CHOICES = [
@@ -281,3 +287,6 @@ class Shop(models.Model):
 
     def __str__(self):
         return f'{self.owner}\'s shop'
+
+    def visited(self):
+        object_viewed.send(sender=self.__class__, instance=self)

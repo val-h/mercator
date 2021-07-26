@@ -1,4 +1,4 @@
-from django.dispatch import receiver
+from django.dispatch import receiver, Signal
 from django.db.models.signals import (
     post_save,
     pre_delete
@@ -9,7 +9,12 @@ from .models import (
     ShopAnalytics,
     ShopStyle,
     Visit,
+    Product
 )
+
+
+# Custom signals
+object_viewed = Signal(providing_args=['instance'])
 
 
 @receiver(post_save, sender=Shop)
@@ -36,3 +41,23 @@ def _on_shop_deleted(sender, instance, **kwargs):
     # Delete shop style
     if instance.style:
         instance.style.delete()
+
+
+@receiver(object_viewed, sender=Shop)
+def _on_shop_viewed(sender, instance, **kwargs):
+    if instance:
+        Visit.objects.create(
+            shop_analytics=instance.analytics,
+            model=Visit.SHOP,
+            model_id=instance.id
+        )
+
+
+@receiver(object_viewed, sender=Product)
+def _on_product_viewed(sender, instance, **kwargs):
+    if instance:
+        Visit.objects.create(
+            shop_analytics=instance.shop.analytics,
+            model=Visit.PRODUCT,
+            model_id=instance.id
+        )
