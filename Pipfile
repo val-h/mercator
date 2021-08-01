@@ -7,6 +7,9 @@ name = "pypi"
 django = "*"
 pillow = "*"
 psycopg2-binary = "*"
+gunicorn = "*"
+django-heroku = "*"
+whitenoise = "*"
 
 [dev-packages]
 

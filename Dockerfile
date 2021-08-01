@@ -15,7 +15,9 @@ RUN pip install pipenv && pipenv install --system
 # Copy project
 COPY . /code
 
-# CMD ["python /code/manage.py runserver", "."]
-
 # Run some command so the container doesn't shut down
 CMD tail -f /dev/null
+
+# For standalone docker image runnin, db doesn't work with this
+# EXPOSE 8000
+# CMD gunicorn --bind :8000 mercator.wsgi:application
