@@ -42,7 +42,7 @@ class Product(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     # Specifications -> table like representation
     times_bought = models.IntegerField(default=0)
-    total_views = models.IntegerField(default=0)
+    total_views = models.IntegerField(default=0) # To be refactored
     shop = models.ForeignKey(
         'Shop',
         on_delete=models.CASCADE,
@@ -58,6 +58,18 @@ class Product(models.Model):
             model=Visit.PRODUCT,
             model_id=self.id
         )
+
+    def serilize(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'quantity': self.quantity,
+            'category': self.category,
+            'shop': self.shop,
+            'times_bought': self.times_bought
+        }
 
 
 # To be used only with the Product model

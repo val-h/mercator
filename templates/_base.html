@@ -9,6 +9,7 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
         {% block css_addon %}{% endblock %} <!-- page specific css -->
+        {% block js_addon %}{% endblock %} <!-- page specific js -->
     </head>
     <body>
         <header>

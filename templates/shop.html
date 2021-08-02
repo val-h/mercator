@@ -4,4 +4,13 @@
 
 {% block content %}
     <h1>{{ shop }}</h1>
+
+    <h3>Products</h3>
+    <ul>
+        {% for product in products %}
+            <li>{{ product.title }} - {{ product.price }}</li>
+        {% empty %}
+            <li>No products available : /</li>
+        {% endfor %}
+    </ul>
 {% endblock content %}
