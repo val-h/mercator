@@ -87,10 +87,12 @@ Most importantly, ***Tests***, a lot of them. Both unit and integration tests wo
 
 
 ## Live deployment of the project
-After my Mercator is finished, I will deploy the app(probably on Heroku) and configure it 
+~~After Mercator is finished, I will deploy the app(probably on Heroku) and configure it 
 appropriately to serve static amd media(with *Cloudinary*) files, working with postgres, 
-security and also experimenting with scalability(most likely not needed).
+security and also experimenting with scalability(most likely not needed).~~
 
+Just made a connection from GitHub to Heroku for CD(and proud about it). The docker container is running and you can browse the website but sadly the db is not configured
+properly yet, a task for my next update.
 
 ## Disclamer
 As I develop the project there might be things that require change, removal or perhaps 
