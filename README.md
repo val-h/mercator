@@ -11,7 +11,7 @@ brand. All customizable and with a lot of features!
 
 
 ## About the Project
-This is my final project for Harvard's CS50Web course. **Planned**, **designed** and **developed** by me with 
+This is my final project for Harvard's CS50Web course.**Researched**, **Planned**, **Designed** and **Developed** by me with 
 the least amount of external packages allowing me to build my own systems, experiment and learn as much as 
 possible.
 
@@ -60,9 +60,12 @@ possible! Here are the helper models(models with leading underscore are *private
 - Category
 - Tag
 - Cart
-- _ShopStyle
-- _ShopAnalytics
-- _ShopManagement
+- _ShopStyle:
+    - background type selection
+    - theme colors selection 
+    - custom shop logo
+- _ShopAnalytics: used mainly for grouping everything analytics related
+- ~~_ShopManagement~~ < all of these settings will go to the Shop model itself.
 
 ### How these features will be delivered/structured?
 Since I will be using little to no 3rd party libraries, other than Django and Pillow(required for 
@@ -72,7 +75,7 @@ of more complex tasks. The structure of the webapp for managing different tasks:
 - **users** - handling users, authentication, authorisation(on base level) and auth. templates
 - **shop** - api that will be responsible for everything product and shop related
 
-**Docker** will also be included and configured!
+**Docker** will also be included and configured! < this was probably a mistake and not needed for my project
 **PostgreSQL** set as the default database
 
 ### What i didn't use and why?
