@@ -250,6 +250,7 @@ class ShopAnalytics(models.Model):
 class ShopStyle(models.Model):
     logo = models.ImageField(
         upload_to='images/shops/',
+        blank=True,
         default='images/shops/shop_default_logo.png')
 
     COLOR = 'C'
@@ -274,6 +275,7 @@ class ShopStyle(models.Model):
     background_color = models.CharField(max_length=7, default='#000000')
     background_image = models.ImageField(
         upload_to='images/shops/',
+        blank=True,
         default=None
     )
 

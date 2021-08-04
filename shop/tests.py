@@ -27,24 +27,23 @@ User = get_user_model()
 def _create_customer(
         username='test',
         password='testPass123',
-        email='test@user.xyz'
     ):
     
     customer = User.objects.create(
         username=username,
         password=password,
-        email=email
+        email=f'{username}@mercator.xyz'
     )
     return customer
 
-def _create_merchant():
-    merchant = User.objects.create(
-        username='mercator',
-        password='testPass123',
-        email='mercator@mail.com',
-        account_type=User.MERCHANT
-    )
-    return merchant
+# def _create_merchant(): obscolete
+#     merchant = User.objects.create(
+#         username='mercator',
+#         password='testPass123',
+#         email='mercator@mail.com',
+#         account_type=User.MERCHANT
+#     )
+#     return merchant
 
 def _create_shop(owner: User, points=0, analytics=None, style=None) -> Shop:
     shop = Shop.objects.create(
@@ -56,7 +55,7 @@ def _create_shop(owner: User, points=0, analytics=None, style=None) -> Shop:
 
 class ProductTests(TestCase):
     def setUp(self):
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer(username='mercator')
         self.shop = _create_shop(self.merchant)
         self.book_category = Category.objects.create(
             name='Books',
@@ -155,7 +154,7 @@ class ProductTests(TestCase):
 # needs some extentions
 class ImageTests(TestCase):
     def setUp(self):
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer()
         self.shop = _create_shop(self.merchant)
         self.product = Product.objects.create(
             title='LotR',
@@ -196,7 +195,7 @@ class OrderTests(TestCase):
     def setUp(self):
         # Create a sample user
         self.customer = _create_customer()
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer(username='mercator')
         self.shop = _create_shop(self.merchant)
         self.item1 = Product.objects.create(
             title='Random Book',
@@ -254,7 +253,7 @@ class ShipmentTests(TestCase):
 
         # helper models
         self.customer = _create_customer(username='JohnDoe')
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer()
         self.shop = _create_shop(self.merchant)
         self.order = Order.objects.create(
             customer=self.customer,
@@ -307,7 +306,7 @@ class ShipmentTests(TestCase):
 class CartTests(TestCase):
     def setUp(self):
         self.customer = _create_customer()
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer(username='mercator')
         self.shop = _create_shop(owner=self.merchant)
         self.item1 = Product.objects.create(
             title='Smartphone',
@@ -349,7 +348,7 @@ class CartTests(TestCase):
 class ReviewTests(TestCase):
     def setUp(self):
         self.customer = _create_customer()
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer(username='mercator')
         self.shop = _create_shop(owner=self.merchant)
         self.product = Product.objects.create(
             title='Notebook',
@@ -376,7 +375,7 @@ class ReviewTests(TestCase):
 
 class ShopTests(TestCase):
     def setUp(self):
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer(username='mercator')
         self.shop = _create_shop(self.merchant, points=7)
 
     def test_shop_owner(self):
@@ -432,7 +431,7 @@ class AnalyticsTests(TestCase):
         # self.analytics = ShopAnalytics.objects.create()
 
         # Create a test shop and product
-        self.merchant = _create_merchant()
+        self.merchant = _create_customer()
         self.shop = _create_shop(self.merchant)
         self.book_product = Product.objects.create(
             title='SPQR',
