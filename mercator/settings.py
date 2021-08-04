@@ -1,11 +1,15 @@
 from pathlib import Path
 import os
+from environs import Env
+
+env = Env()
+env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-6t_7y*p&cpac2@)rlgw01rc!)&y$h2quq^l-9!6tfzgxf@*u21'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG')
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -65,15 +69,21 @@ WSGI_APPLICATION = 'mercator.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'db',
+#         'PORT': 5432
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432
-    }
+    'default': env.dj_db_url(
+        'DATABASE_URL', # created by heroku on deploy
+        default='postgres://postgres@db/postgres')
 }
 
 

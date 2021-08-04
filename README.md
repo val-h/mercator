@@ -94,6 +94,8 @@ security and also experimenting with scalability(most likely not needed).~~
 Just made a connection from GitHub to Heroku for CD(and proud about it). The docker container is running and you can browse the website but sadly the db is not configured
 properly yet, a task for my next update.
 
+The link is available here ***[mercator](http://mercator-val.herokuapp.com/)***
+
 ## Disclamer
 As I develop the project there might be things that require change, removal or perhaps 
 new features being included. This description is not complete and most certainly won't be 
