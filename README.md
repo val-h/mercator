@@ -3,7 +3,7 @@
 
 ## Quick Overview
 '**Mercator**' translated from latin meaning merchant is an online shop platform. *Users* would be able to browse, 
-buy and review products well as having the ability to open their own shop! Product recomendation is based on 
+buy and review products as well as having the ability to open their own shop! Product recomendation is based on 
 preferences and searches by the customer, optimizing the experience and shop sales.
 
 *Merchants* can launch new products, manage the design, settings and analytics for their shop and grow their
@@ -35,6 +35,7 @@ Browsing the shops and products will be available to all users with the followin
 - Review products after making a purchase
 - Apply your own preferences for products
 - Manage the orders you places
+- Edit your shipping information for orders
 - **Open your own shop!**
 
 After openning a shop you become a merchant, an extended version of a regular customer. This upgrade 
@@ -47,24 +48,27 @@ These are the privilages you have:
     - Product Creation
     - Shipment settings
 - Custom styling(limited)
+    - Uploading custom logo
+    - Managing the background type
+        - Solid color(default)
+        - Background image/gif
+    -Choosing between theme colors
 - Analytics
     - track order and product performance
-    - track individual page visits
-    - monitor overall growth 
+    - track individual page visits (Shop/Product)
+    - monitor overall growth
 
 Along with the features of the app, helper data models are required for better organisation and 
 management of the project, whithout bloating everything in one place. Keeping it simple as much as 
 possible! Here are the helper models(models with leading underscore are *private*):
-- Order
+- Image (for multiple arbitrary images on products)
 - Shipment(Mainly details saved to each user's preferences)
-- Category
-- Tag
-- Cart
 - _ShopStyle:
     - background type selection
     - theme colors selection 
     - custom shop logo
 - _ShopAnalytics: used mainly for grouping everything analytics related
+    - Visit (each visit is stored as its own instance with a reference to analytics)
 - ~~_ShopManagement~~ < all of these settings will go to the Shop model itself.
 
 ### How these features will be delivered/structured?
