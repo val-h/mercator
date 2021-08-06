@@ -4,11 +4,12 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
 from . import views
+from shop.models import Shop
 
 
 # The basic tests will not be running DRY, for now this works
 # and doesn't complicate the tests
-class BasicPageTests(SimpleTestCase):
+class HomePageTests(SimpleTestCase):
 
     def setUp(self):
         self.home = self.client.get(reverse('pages:home'))
@@ -110,7 +111,7 @@ class CartPageTests(SimpleTestCase):
 class AccountPageTests(TestCase):
     def setUp(self):
         User = get_user_model()
-        test_user = User.objects.create_user(
+        _ = User.objects.create_user(
             email='test@mail.com',
             username='test',
             password='testPass123',
@@ -153,3 +154,31 @@ class SearchPageTests(SimpleTestCase):
     def test_search_url_view_resolve(self):
         page_view = resolve('/search/keyword')
         self.assertEqual(page_view.func.__name__, views.search.__name__)
+
+
+class ShopPageTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        mercahnt = User.objects.create_user(
+            email='test@mail.com',
+            username='test',
+            password='testPass123',
+        )
+        _ = Shop.objects.create(owner=mercahnt)
+        client = Client()
+        client.login(username='test', password='testPass123')
+        # Request with authenticated client
+        self.auth_page = client.get(reverse('pages:shop'))
+        # Request with anonymous user
+        self.anon_page = self.client.get(reverse('pages:shop'))
+
+    def test_shop_url_name(self):
+        self.assertEqual(self.auth_page.status_code, 200)
+        self.assertEqual(self.anon_page.status_code, 302 or 404)
+
+    def test_shop_template_used(self):
+        self.assertTemplateUsed(self.auth_page, 'shop.html')
+
+    def test_shop_url_view_resolve(self):
+        page_view = resolve('/shop/')
+        self.assertEqual(page_view.func.__name__, views.shop.__name__)

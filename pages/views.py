@@ -31,3 +31,12 @@ def search(request, pattern):
     return render(request, 'search.html', {
         "pattern": pattern
     })
+
+@login_required
+def shop(request):
+    shop = request.user.shop
+    products = shop.products.all()
+    return render(request, 'shop.html', {
+        'shop': shop,
+        'products': products
+    })

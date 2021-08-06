@@ -12,4 +12,5 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('account/', views.account, name='account'),
     path('search/<str:pattern>', views.search, name='search'),
+    path('shop/', views.shop, name='shop'),
 ]

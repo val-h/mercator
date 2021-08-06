@@ -8,7 +8,12 @@
     <h3>Products</h3>
     <ul>
         {% for product in products %}
-            <li>{{ product.title }} - {{ product.price }}</li>
+            <li>
+                <div>
+                    {{ product.title }} - {{ product.price }}
+                    
+                </div>
+            </li>
         {% empty %}
             <li>No products available : /</li>
         {% endfor %}

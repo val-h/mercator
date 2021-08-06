@@ -98,9 +98,10 @@ Most importantly, ***Tests***, a lot of them. Both unit and integration tests wo
 appropriately to serve static amd media(with *Cloudinary*) files, working with postgres, 
 security and also experimenting with scalability(most likely not needed).~~
 
-Just made a connection from GitHub to Heroku for CD(and proud about it). The docker container is running and you can browse the website but sadly the db is not configured
-properly yet, a task for my next update.
+Just made a connection from GitHub to Heroku for CD(and proud about it). The docker container is running and you can browse the website ~~but sadly the db is not configured
+properly yet, a task for my next update~~.
 
+CI/CD configured, SSL Certificate
 The link is available here ***[mercator](http://mercator-val.herokuapp.com/)***
 
 ## Disclamer

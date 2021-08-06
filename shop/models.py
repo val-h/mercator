@@ -10,6 +10,9 @@ class Category(models.Model):
     name = models.CharField(max_length=60)
     description = models.TextField(blank=True)
 
+    class Meta:
+        verbose_name_plural = 'categories'
+
     def __str__(self):
         return self.name
 
@@ -42,12 +45,14 @@ class Product(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     # Specifications -> table like representation
     times_bought = models.IntegerField(default=0)
-    total_views = models.IntegerField(default=0) # To be refactored
     shop = models.ForeignKey(
         'Shop',
         on_delete=models.CASCADE,
         related_name='products'    
     )
+
+    class Meta:
+        ordering = ['-date_created']
 
     def __str__(self):
         return str(self.title)
@@ -246,6 +251,9 @@ class ShopAnalytics(models.Model):
             query = self.visits.filter(model=Visit.PRODUCT, model_id=id)
         return query
 
+    def __str__(self):
+        return f'{self.shop} - analytics'
+
 
 class ShopStyle(models.Model):
     logo = models.ImageField(
@@ -278,6 +286,9 @@ class ShopStyle(models.Model):
         blank=True,
         default=None
     )
+
+    def __str__(self):
+        return f'{self.shop} - style'
 
 
 class Shop(models.Model):

@@ -10,7 +10,9 @@ from .models import (
     Visit,
     Shop,
     ShopAnalytics,
-    ShopStyle
+    ShopStyle,
+    Category,
+    Tag
 )
 
 admin.site.register(Product)
@@ -23,3 +25,5 @@ admin.site.register(Visit)
 admin.site.register(Shop)
 admin.site.register(ShopAnalytics)
 admin.site.register(ShopStyle)
+admin.site.register(Category)
+admin.site.register(Tag)
