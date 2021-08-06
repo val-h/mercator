@@ -459,15 +459,15 @@ class AnalyticsTests(TestCase):
         self.assertEqual(len(self.shop.analytics.shop_visits()), 1)
 
     def test_create_product_visit(self):
-        for i in range(17):
+        for _ in range(17):
             visit = self._create_visit(Visit.PRODUCT, self.book_product.id)
         self.assertTrue(visit)
         self.assertEqual(len(self.shop.analytics.product_visits()), 17)
 
     def test_multiple_product_visits(self):
-        for i in range(7):
+        for _ in range(7):
             self._create_visit(Visit.PRODUCT, self.book_product.id)
-        for i in range(77):
+        for _ in range(77):
             self._create_visit(Visit.PRODUCT, self.flower_product.id)
         self.assertEqual(len(self.shop.analytics.product_visits()), 84)
         self.assertEqual(len(self.shop.analytics.product_visits(
@@ -478,11 +478,11 @@ class AnalyticsTests(TestCase):
         )), 77)
 
     def test_complete_shop_and_product_visits(self):
-        for i in range(7):
+        for _ in range(7):
             self._create_visit(Visit.SHOP, self.shop.id)
-        for i in range(77):
+        for _ in range(77):
             self._create_visit(Visit.PRODUCT, self.book_product.id)
-        for i in range(777):
+        for _ in range(777):
             self._create_visit(Visit.PRODUCT, self.flower_product.id)
         self.assertEqual(len(self.shop.analytics.visits.all()), 861)
         self.assertEqual(len(self.shop.analytics.shop_visits()), 7)
@@ -494,12 +494,12 @@ class AnalyticsTests(TestCase):
         )), 777)
 
     def test_shop_model_visited_method(self):
-        for visit in range(7):
+        for _ in range(7):
             self.shop.visited()
         self.assertEqual(self.shop.analytics.visits.count(), 7)
 
     def test_product_model_visited_method(self):
-        for visit in range(77):
+        for _ in range(77):
             self.book_product.visited()
         self.assertEqual(self.shop.analytics.product_visits(
             id=self.book_product.id
