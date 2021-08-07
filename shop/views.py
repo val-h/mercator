@@ -15,8 +15,20 @@ def products(request):
     elif request.method == 'POST' and request.user.shop:
         # data = request.POST
         data = json.loads(request.body)
+        try:
+            new_product = Product.objects.create(
+                shop=request.user.shop,
+                title=data['title'],
+                description=data['description'],
+                price=data['price'],
+                quantity=data['quantity'])
+            new_product.save()
+        except Exception:
+            message = 'Failed to create the product.'
+        finally:
+            message =  'Successful POST request!'
         return JsonResponse({
-            'message': 'Successful POST request!',
+            'message': message,
             'data': data
         })
 
