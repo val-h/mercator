@@ -64,15 +64,15 @@ class Product(models.Model):
             model_id=self.id
         )
 
-    def serilize(self):
+    def serialize(self):
         return {
             'id': self.id,
             'title': self.title,
             'description': self.description,
             'price': self.price,
             'quantity': self.quantity,
-            'category': self.category,
-            'shop': self.shop,
+            'category': self.category.name,
+            'shop': self.shop.serialize(),
             'times_bought': self.times_bought
         }
 
@@ -323,3 +323,11 @@ class Shop(models.Model):
             model=Visit.SHOP,
             model_id=self.id
         )
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'owner': self.owner.username,
+            'date_created': self.date_created,
+            'points': self.points,
+        }

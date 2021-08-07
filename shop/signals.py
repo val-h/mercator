@@ -28,7 +28,7 @@ def _on_shop_create(sender, instance, created, **kwargs):
         instance.analytics = analytics
         instance.style = style
         # Set the owner's account type to being a mercahnt
-        instance.owner.account_type = get_user_model().MERCHANT
+        instance.owner.convert_to_merchant()
         # print('Shop set up complete!')
 
 
@@ -44,6 +44,8 @@ def _on_shop_deleted(sender, instance, **kwargs):
     # Delete shop style
     if instance.style:
         instance.style.delete()
+
+    instance.owner.convert_to_customer()
 
 
 # curcular import, these signals are probably not even needed

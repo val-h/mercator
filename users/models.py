@@ -22,3 +22,22 @@ class CustomUser(AbstractUser):
         default=CUSTOMER)
 
     # preferences = models.ForeignKey()
+
+    def __str__(self):
+        return f'{self.username}'
+
+    def convert_to_customer(self):
+        self.is_shop_owner = False
+        self.account_type = self.CUSTOMER
+
+    def convert_to_merchant(self):
+        self.is_shop_owner = True
+        self.account_type = self.MERCHANT
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'is_shop_owner': self.is_shop_owner,
+        }

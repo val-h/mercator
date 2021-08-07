@@ -22,5 +22,5 @@ urlpatterns = [
     path('definitely-not-admin/', admin.site.urls),
     path('auth/', include('users.urls')),
     path('', include('pages.urls')),
-    path('', include('shop.urls')),
+    path('api/', include('shop.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

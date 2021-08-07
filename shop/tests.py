@@ -219,8 +219,10 @@ class OrderTests(TestCase):
     def test_order_items_add(self):
         self.order.items.add(self.item1)
         self.order.items.add(self.item2)
-        self.assertEqual(self.order.items.first().title, 'Random Book')
-        self.assertEqual(self.order.items.last().title, 'Random Shirt')
+        # Changed the product ordering from Meta class
+        # Now newer products are set first
+        self.assertEqual(self.order.items.first().title, 'Random Shirt')
+        self.assertEqual(self.order.items.last().title, 'Random Book')
 
     def test_order_status_change(self):
         self.assertEqual(self.order.status, 'PL')  # Order.PLACED by default
