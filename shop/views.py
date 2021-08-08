@@ -35,18 +35,18 @@ def products(request):
             new_product.full_clean()
 
             new_product.save()
-            message_dict =  ['Product successfuly created.']
+            messages =  ['Product successfuly created.']
             status = 201
         except ValidationError as e:
             # Send back a message with specific field validation errors
-            message_dict = ['Invalid field data.', *e]
+            messages = ['Invalid field data.', *e]
             status = 400
-        except Exception:
-            message_dict = ['Failed to create the product.']
+        except Exception as e:
+            messages = ['Failed to create the product.', *e]
             status = 400
 
         return JsonResponse({
-            'messages': message_dict,
+            'messages': messages,
             # 'data': data,
         }, status=status)
 
@@ -59,7 +59,7 @@ def product(request, id):
     try:
         product = Product.objects.get(pk=id)
     except ObjectDoesNotExist:
-        message_dict = ['Object does not exist.']
+        messages = ['Object does not exist.']
         status = 404
     else:
         if request.method == 'GET':
@@ -69,7 +69,7 @@ def product(request, id):
 
         # Deny access to any user that is not the owner of the shop
         elif request.user != product.shop.owner:
-            message_dict = ['Access denied.']
+            messages = ['Access denied.']
             status = 403
 
         # Gives errors on the decimal price field
@@ -86,51 +86,74 @@ def product(request, id):
 
                 product.save()
                 # product.save(update_fileds=[*data.keys()])
-                message_dict = ['Product updated successfuly.']
+                messages = ['Product updated successfuly.']
                 status = 200
             except ValidationError as e:
-                message_dict = ['Invalid field data.', *e]
+                messages = ['Invalid field data.', *e]
                 status = 400
-            except Exception:
-                message_dict = ['Could not update the product.']
+            except Exception as e:
+                messages = ['Could not update the product.', *e]
                 status = 400
 
         elif request.method == 'DELETE':
             product.delete()
-            message_dict = ['Product successfuly deleted.']
+            messages = ['Product successfuly deleted.']
             status = 200
             
         else:
-            message_dict = ['Unsuported request method.']
+            messages = ['Unsuported request method.']
             status = 405
     
     return JsonResponse({
-        'messages': message_dict
+        'messages': messages
     }, status=status)
 
 
 def shop(request):
-    if request.method == 'GET':
-        try:
-            shop = request.user.shop
+    try:
+        shop = request.user.shop
+    except ObjectDoesNotExist as e:
+        messages = [*e]
+        status = 404
+    else:
+        if request.method == 'GET':
             return JsonResponse({
                 'shop': shop.serialize()
             }, status=200)
-        except ObjectDoesNotExist as e:
-            message_dict = [*e]
-            status = 404
     
-    # To be tested
-    elif request.method == 'POST':
-        if not request.user.shop:
+        # To be tested
+        elif request.method == 'POST':
+            if not request.user.shop:
+                data = json.loads(request.body)
+                try:
+                    # Attempt to create a new shop
+                    shop = Shop.objects.create(
+                        owner=request.user
+                    )
+
+                    # Apply optional fields if present
+                    for field, value in data.items():
+                        if field in Shop.CONFIGURABLE_FIELDS:
+                            setattr(shop, field, value)
+
+                    # Validate the shop
+                    shop.full_clean()
+
+                    shop.save()
+                    messages = ['Shop successfuly created.']
+                    status = 201
+                except (ValidationError, Exception) as e:
+                    # pass e default message and unpack the error as seperate msgs
+                    messages = ['Invalid field type', *e]
+                    status = 400
+            else:
+                messages = ['The user already has an open shop.']
+                status = 400
+
+        elif request.method == 'PUT':
             data = json.loads(request.body)
             try:
-                # Attempt to create a new shop
-                shop = Shop.objects.create(
-                    owner=request.user
-                )
-
-                # Apply optional fields if present
+                # Attempt to update the fields
                 for field, value in data.items():
                     if field in Shop.CONFIGURABLE_FIELDS:
                         setattr(shop, field, value)
@@ -139,22 +162,22 @@ def shop(request):
                 shop.full_clean()
 
                 shop.save()
-                message_dict = ['Shop successfuly created.']
-                status = 201
-            except (ValidationError, Exception) as e:
-                # pass e default message and unpack the error as seperate msgs
-                message_dict = ['Invalid field type', *e]
+                messages = ['Shop successfuly updated.']
+                status = 200
+            except ValidationError as e:
+                messages = ['Invalid field type', *e]
                 status = 400
 
-    elif request.method == 'PUT':
-        pass
+        # StackOverflow error -> signals.py line 43
+        elif request.method == 'DELETE':
+            shop.delete()
+            messages = ['Shop successfuly deleted.']
+            status = 200
 
-    elif request.method == 'DELETE':
-        pass
-
-    else:
-        pass
+        else:
+            messages = ['Unsuported request method.']
+            status = 405
         
     return JsonResponse({
-        'messages': message_dict
+        'messages': messages
     }, status=status)
