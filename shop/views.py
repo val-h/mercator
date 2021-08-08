@@ -9,9 +9,14 @@ from .models import Shop, Product
 def products(request):
     if request.method == 'GET':
         products = Product.objects.all()
-        return JsonResponse({
-            'products': [product.serialize() for product in products]
-        })
+        if products.count() > 0:
+            return JsonResponse({
+                'products': [product.serialize() for product in products]
+            })
+        else:
+            return JsonResponse({
+                'message': 'No products available.'
+            })
     # Working with  both form-data and plain JSON data
     elif request.method == 'POST' and request.user.shop:
         # data = request.POST

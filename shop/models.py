@@ -71,7 +71,7 @@ class Product(models.Model):
             'description': self.description,
             'price': self.price,
             'quantity': self.quantity,
-            'category': self.category.name,
+            'category': self.category,
             'shop': self.shop.serialize(),
             'times_bought': self.times_bought
         }
