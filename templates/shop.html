@@ -5,17 +5,18 @@
 {% block content %}
     <h1>{{ shop }}</h1>
 
-    <h3>Products</h3>
-    <ul>
+    <div id="shop-products" style="margin: 25px;">
+        <h3>Products</h3>
         {% for product in products %}
-            <li>
-                <div>
-                    {{ product.title }} - {{ product.price }}
-                    
-                </div>
-            </li>
+            <div>
+                ID:{{product.id}}<br>
+                Title: {{ product.title }}<br>
+                Price: {{ product.price }}<br>
+                Quantity: {{ product.quantity}}<br>
+                Category: {{ product.category }}<br>
+            </div>
         {% empty %}
-            <li>No products available : /</li>
+            No products available : /
         {% endfor %}
-    </ul>
+    </div>
 {% endblock content %}

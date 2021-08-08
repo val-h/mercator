@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 import json
 
 from .models import Shop, Product
@@ -38,24 +39,35 @@ def products(request):
         })
 
 def product(request, id):
-    product = Product.objects.get(pk=id)
-    if request.method == 'GET':
-        return JsonResponse({
-            'product': product.serialize()
-        })
-    elif request.user != product.shop.owner:
-        return JsonResponse({
-            'message': 'Access denied.'
-        })
-    elif request.method == 'PUT':
-        pass
-    elif request.method == 'PATCH':
-        pass
-    elif request.method == 'DELETE':
-        pass
-
+    try:
+        product = Product.objects.get(pk=id)
+    except ObjectDoesNotExist:
+        message = 'Object does not exist.'
     else:
-        return JsonResponse({
-            'message': 'Unsuported request method.'
-        })
+        if request.method == 'GET':
+            return JsonResponse({
+                'product': product.serialize()
+            })
+        elif request.user != product.shop.owner:
+            message = 'Access denied.'
+        elif request.method == 'PUT':
+            data = json.loads(request.body)
+            try:
+                for field, value in data.items():
+                    setattr(product, field, value)
+                product.save()
+            except Exception:
+                message = 'Could not update the product.'
+            else:
+                message = 'Product updated successfuly.'
+        elif request.method == 'DELETE':
+            product.delete()
+            message = 'Product successfuly deleted.'
+            
+        else:
+            message = 'Unsuported request method.'
+    
+    return JsonResponse({
+        'message': message
+    })
         
