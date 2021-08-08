@@ -35,7 +35,7 @@ def products(request):
             new_product.full_clean()
 
             new_product.save()
-            message_dict =  ['Successful POST request!']
+            message_dict =  ['Product successfuly created.']
             status = 201
         except ValidationError as e:
             # Send back a message with specific field validation errors
@@ -107,4 +107,54 @@ def product(request, id):
     return JsonResponse({
         'messages': message_dict
     }, status=status)
+
+
+def shop(request):
+    if request.method == 'GET':
+        try:
+            shop = request.user.shop
+            return JsonResponse({
+                'shop': shop.serialize()
+            }, status=200)
+        except ObjectDoesNotExist as e:
+            message_dict = [*e]
+            status = 404
+    
+    # To be tested
+    elif request.method == 'POST':
+        if not request.user.shop:
+            data = json.loads(request.body)
+            try:
+                # Attempt to create a new shop
+                shop = Shop.objects.create(
+                    owner=request.user
+                )
+
+                # Apply optional fields if present
+                for field, value in data.items():
+                    if field in Shop.CONFIGURABLE_FIELDS:
+                        setattr(shop, field, value)
+
+                # Validate the shop
+                shop.full_clean()
+
+                shop.save()
+                message_dict = ['Shop successfuly created.']
+                status = 201
+            except (ValidationError, Exception) as e:
+                # pass e default message and unpack the error as seperate msgs
+                message_dict = ['Invalid field type', *e]
+                status = 400
+
+    elif request.method == 'PUT':
+        pass
+
+    elif request.method == 'DELETE':
+        pass
+
+    else:
+        pass
         
+    return JsonResponse({
+        'messages': message_dict
+    }, status=status)

@@ -51,6 +51,9 @@ class Product(models.Model):
         related_name='products'    
     )
 
+    # Utils
+    CONFIGURABLE_FIELDS = ['price', 'quantity', 'description', 'title']
+
     class Meta:
         ordering = ['-date_created']
 
@@ -313,6 +316,10 @@ class Shop(models.Model):
         null=True,
         default=None
     )
+
+    # Utils
+    # Specify the fields that can be configured from the api
+    CONFIGURABLE_FIELDS = ['points']
 
     def __str__(self):
         return f'{self.owner}\'s shop'
