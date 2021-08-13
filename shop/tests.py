@@ -320,6 +320,8 @@ class CartTests(TestCase):
             description='Pretty cool flask for water.',
             shop=self.shop
         )
+        # Dodging a bullet
+        self.cart = self.customer.cart
         # After the signal, obscolete
         # self.cart = Cart.objects.create(
         #     user=self.customer
