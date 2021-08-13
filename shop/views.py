@@ -19,10 +19,12 @@ def products(request):
             }, status=204)
 
     # Working with  both form-data and plain JSON data
-    elif request.method == 'POST' and request.user.shop:
+    elif request.method == 'POST':
         # data = request.POST # For form-data
         data = json.loads(request.body)
         try:
+            if not hasattr(request.user, 'shop'):
+                raise ObjectDoesNotExist
             # Attempt to create a new product from the POST data
             new_product = Product.objects.create(
                 shop=request.user.shop,
@@ -37,17 +39,19 @@ def products(request):
             new_product.save()
             messages =  ['Product successfuly created.']
             status = 201
-        except ValidationError as e:
+        except ValidationError:
             # Send back a message with specific field validation errors
-            messages = ['Invalid field data.', *e]
+            messages = ['Invalid field data.']
             status = 400
-        except Exception as e:
-            messages = ['Failed to create the product.', *e]
+        except ObjectDoesNotExist:
+            messages = ['The user is not a merchant. Shop does not exist']
+            status = 404
+        except Exception:
+            messages = ['Failed to create the product.']
             status = 400
 
         return JsonResponse({
             'messages': messages,
-            # 'data': data,
         }, status=status)
 
     else:
@@ -88,11 +92,11 @@ def product(request, id):
                 # product.save(update_fileds=[*data.keys()])
                 messages = ['Product updated successfuly.']
                 status = 200
-            except ValidationError as e:
-                messages = ['Invalid field data.', *e]
+            except ValidationError:
+                messages = ['Invalid field data.']
                 status = 400
-            except Exception as e:
-                messages = ['Could not update the product.', *e]
+            except Exception:
+                messages = ['Could not update the product.']
                 status = 400
 
         elif request.method == 'DELETE':
@@ -110,48 +114,63 @@ def product(request, id):
 
 
 def shop(request):
-    try:
-        shop = request.user.shop
-    except ObjectDoesNotExist as e:
-        messages = [*e]
-        status = 404
-    else:
-        if request.method == 'GET':
+
+    def _get_shop(user):
+        nonlocal messages
+        nonlocal status
+        try:
+            shop = Shop.objects.get(owner=user)
+        except ObjectDoesNotExist:
+            messages = ['The user is not a merchant. Shop does not exist']
+            status = 404
+        except Exception:
+            messages = ['Some wierd error occured.']
+            status = 400
+        else:
+            return shop
+
+    if request.method == 'GET':
+        shop = _get_shop(request.user)
+        if shop:
             return JsonResponse({
                 'shop': shop.serialize()
             }, status=200)
-    
-        # To be tested
-        elif request.method == 'POST':
-            if not request.user.shop:
-                data = json.loads(request.body)
-                try:
-                    # Attempt to create a new shop
-                    shop = Shop.objects.create(
-                        owner=request.user
-                    )
 
-                    # Apply optional fields if present
-                    for field, value in data.items():
-                        if field in Shop.CONFIGURABLE_FIELDS:
-                            setattr(shop, field, value)
-
-                    # Validate the shop
-                    shop.full_clean()
-
-                    shop.save()
-                    messages = ['Shop successfuly created.']
-                    status = 201
-                except (ValidationError, Exception) as e:
-                    # pass e default message and unpack the error as seperate msgs
-                    messages = ['Invalid field type', *e]
-                    status = 400
-            else:
-                messages = ['The user already has an open shop.']
-                status = 400
-
-        elif request.method == 'PUT':
+    elif request.method == 'POST':
+        if not hasattr(request.user, 'shop'):
             data = json.loads(request.body)
+            try:
+                # Attempt to create a new shop
+                shop = Shop.objects.create(
+                    owner=request.user
+                )
+
+                # Apply optional fields if present
+                for field, value in data.items():
+                    if field in Shop.CONFIGURABLE_FIELDS:
+                        setattr(shop, field, value)
+
+                # Validate the shop
+                shop.full_clean()
+
+                shop.save()
+                messages = ['Shop successfuly created.']
+                status = 201
+            except ValidationError:
+                messages = ['Invalid field type']
+                status = 400
+            except Exception as e:
+                # Just to see specific errors
+                messages = [f'Exception: {repr(e)}']
+                status = 400
+        else:
+            messages = ['The user already has an open shop.']
+            status = 400
+
+    elif request.method == 'PUT':
+        shop = _get_shop(request.user)
+        data = json.loads(request.body)
+        if shop:
             try:
                 # Attempt to update the fields
                 for field, value in data.items():
@@ -164,19 +183,20 @@ def shop(request):
                 shop.save()
                 messages = ['Shop successfuly updated.']
                 status = 200
-            except ValidationError as e:
-                messages = ['Invalid field type', *e]
+            except ValidationError:
+                messages = ['Invalid field type']
                 status = 400
 
-        # StackOverflow error -> signals.py line 43
-        elif request.method == 'DELETE':
+    elif request.method == 'DELETE':
+        shop = _get_shop(request.user)
+        if shop:
             shop.delete()
             messages = ['Shop successfuly deleted.']
             status = 200
 
-        else:
-            messages = ['Unsuported request method.']
-            status = 405
+    else:
+        messages = ['Unsuported request method.']
+        status = 405
         
     return JsonResponse({
         'messages': messages

@@ -84,7 +84,7 @@ class Product(models.Model):
 class Image(models.Model):
     product = models.ForeignKey(
         Product,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='images')
     image = models.ImageField(
         upload_to='images/',
@@ -120,13 +120,13 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(
         User,
-        on_delete=models.PROTECT,
+        on_delete=models.DO_NOTHING,
         default=None,
         related_name='orders'
     )
     shop = models.ForeignKey(
         'Shop',
-        on_delete=models.PROTECT,
+        on_delete=models.DO_NOTHING,
         related_name='orders'
     )
 
@@ -138,7 +138,7 @@ class Shipment(models.Model):
     # Possibly move to Foreign, orders may have more than 1 shipment
     order = models.OneToOneField(
         Order,
-        on_delete=models.PROTECT,
+        on_delete=models.DO_NOTHING,
         default=None,
         null=True,
         blank=True,
@@ -177,7 +177,7 @@ class Shipment(models.Model):
 class Cart(models.Model):
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='cart'
     )
     items = models.ManyToManyField(
@@ -196,12 +196,12 @@ class Cart(models.Model):
 class Review(models.Model):
     product = models.ForeignKey(
         Product,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='reviews'
     )
     user = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         related_name='reviews'
     )
     date = models.DateTimeField(auto_now_add=True)
@@ -306,13 +306,13 @@ class Shop(models.Model):
 
     style = models.OneToOneField(
         ShopStyle,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         null=True,
         default=None
     )
     analytics = models.OneToOneField(
         ShopAnalytics,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         null=True,
         default=None
     )
