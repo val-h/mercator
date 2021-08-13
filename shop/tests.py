@@ -320,9 +320,10 @@ class CartTests(TestCase):
             description='Pretty cool flask for water.',
             shop=self.shop
         )
-        self.cart = Cart.objects.create(
-            user=self.customer
-        )
+        # After the signal, obscolete
+        # self.cart = Cart.objects.create(
+        #     user=self.customer
+        # )
 
     def test_cart_user(self):
         self.assertTrue(self.cart.user)

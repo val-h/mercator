@@ -10,16 +10,18 @@ from .models import (
     ShopAnalytics,
     ShopStyle,
     Visit,
-    Product
+    Product,
+    Cart
 )
 
+User = get_user_model()
 
 # Custom signals
 object_viewed = Signal(providing_args=['instance'])
 
 
 @receiver(post_save, sender=Shop)
-def _on_shop_create(sender, instance, created, **kwargs):
+def _on_shop_created(sender, instance, created, **kwargs):
     # print(kwargs)
     if created:
         # print(f'Setting up {instance}...')
@@ -46,6 +48,19 @@ def _on_shop_deleted(sender, instance, **kwargs):
         instance.style.delete()
 
     instance.owner.convert_to_customer()
+
+
+# Create a Cart object for the user automatically
+@receiver(post_save, sender=User)
+def _on_user_created(sender, instance, created, **kwargs):
+    if created:
+        _ = Cart.objects.create(user=instance)
+
+@receiver(pre_delete, sender=User)
+def _on_user_deleted(sender, instance, **kwargs):
+    # Clear and Remove the cart
+    instance.cart.clear()
+    instance.cart.delete()
 
 
 # curcular import, these signals are probably not even needed
