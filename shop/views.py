@@ -3,9 +3,10 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import json
 
-from .models import Shop, Product
+from .models import Shop, Product, Review
 
 
+# PRODUCT RELATED
 def products(request):
     if request.method == 'GET':
         products = Product.objects.all()
@@ -83,7 +84,8 @@ def product(request, id):
             try:
                 # Update each of the attributes provided in the request
                 for field, value in data.items():
-                    setattr(product, field, value)
+                    if field in Product.CONFIGURABLE_FIELDS:
+                        setattr(product, field, value)
                 
                 # Validate the product
                 product.full_clean()
@@ -112,7 +114,97 @@ def product(request, id):
         'messages': messages
     }, status=status)
 
+def product_reviews(request, product_id):
+    if request.method == 'GET':
+        # product = Product.objects.get(product_id)
+        reviews = Review.objects.filter(product__id=product_id)
+        if reviews.count() > 0:
+            return JsonResponse({
+                'reviews': [review.serialize() for review in reviews]
+            }, status=200)
+        else:
+            messages = ['No available reviews for this product.']
+            status = 404
 
+    elif request.method == 'POST':
+        data = json.loads(request.body)
+        try:
+            # Attempt to create a review
+            review = Review.objects.create(
+                product=Product.objects.get(id=product_id),
+                user=request.user,
+                text=data['text']
+            )
+
+            # Validate
+            review.full_clean()
+
+            review.save()
+            messages = ['Review successfuly created.']
+            status = 200
+        except ValidationError:
+            messages = ['Invalid field data.']
+            status = 400
+        except ObjectDoesNotExist:
+            messages = ['Product with that id does not exist.']
+            status = 404
+
+    else:
+        messages = ['Unsuported request method.']
+        status = 405
+
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+def product_review(request, product_id, review_id):
+    try:
+        review = Review.objects.get(id=review_id)
+    except ObjectDoesNotExist:
+        messages = ['Review does not exist for that product.']
+        status = 404
+    else:
+        if request.method == 'GET':
+            return JsonResponse({
+                'review': review.serialize()
+            }, status=200)
+
+        elif request.method == 'PUT':
+            data = json.loads(request.body)
+            try:
+                # Attempt to update the review
+                for field, value in data.items():
+                    if field in Review.CONFIGURABLE_FIELDS:
+                        setattr(review, field, value)
+
+                # Validate
+                review.full_clean()
+
+                review.save()
+                messages = ['Review successfuly updated.']
+                status = 200
+            except ValidationError:
+                messages = ['Invalid field data.']
+                status = 400
+            except Exception:
+                messages = ['Could not update the product.']
+                status = 400
+
+        elif request.method == 'DELETE':
+            review.delete()
+            messages = ['Review successfuly deleted.']
+            status = 200
+
+        else:
+            messages = ['Unsuported request method.']
+            status = 405
+    
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+
+# SHOP RELATED
 def shop(request):
 
     def _get_shop(user):

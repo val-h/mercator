@@ -320,12 +320,8 @@ class CartTests(TestCase):
             description='Pretty cool flask for water.',
             shop=self.shop
         )
-        # Dodging a bullet
+        # Dodging a bullet, i need the var so tests don't break
         self.cart = self.customer.cart
-        # After the signal, obscolete
-        # self.cart = Cart.objects.create(
-        #     user=self.customer
-        # )
 
     def test_cart_user(self):
         self.assertTrue(self.cart.user)

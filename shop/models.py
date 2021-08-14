@@ -207,8 +207,24 @@ class Review(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
 
+    CONFIGURABLE_FIELDS = ['text']
+
     def __str__(self):
         return f'Review on {self.product} by {self.user}'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'date': self.date,
+            'text': self.text,
+            'product_id': self.product.id,
+            'user': {
+                'id': self.user.id,
+                'username': self.user.username
+                # possibly add if the user had purchased this product
+                # or make it that only users liek that can review
+            }
+        }
 
 
 class Visit(models.Model):
