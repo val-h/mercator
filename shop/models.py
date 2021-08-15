@@ -137,8 +137,20 @@ class Order(models.Model):
         related_name='orders'
     )
 
+    CONFIGURABLE_FIELDS = ['status', 'items']
+
     def __str__(self):
         return f'ID: {self.id}, Customer: {self.customer}'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'status': self.status,
+            'shop': self.shop.serialize(),
+            'customer': self.customer.serialize(),
+            'date_ordered': self.date_ordered,
+            'items': [product.serialize() for product in self.items.all()]
+        }
 
 
 class Shipment(models.Model):

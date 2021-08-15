@@ -2,7 +2,8 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import json
 
-from .models import Shop
+from .models import Shop, Order, Shipment, ShopAnalytics, ShopStyle, Product
+from django.contrib.auth import get_user_model
 
 
 def shop(request):
@@ -90,6 +91,73 @@ def shop(request):
         messages = ['Unsuported request method.']
         status = 405
         
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+def orders(request):
+    if request.method == 'GET':
+        try:
+            orders = request.user.shop.orders.all()
+            if orders.count() > 0:
+                return JsonResponse({
+                    'orders': [order.serialize() for order in orders]
+                }, status=200)
+            else:
+                raise ObjectDoesNotExist
+        except ObjectDoesNotExist:
+            messages = ['No available orders for this shop.']
+            status = 404
+
+    elif request.method == 'POST':
+        # attributes 
+        # required - customer_id, items: [id, quantity]
+        # optional - status: default, Order.PLACED
+        data = json.loads(request.body)
+        try:
+            customer = get_user_model().objects.get(id=data['customer_id'])
+            # Attempt to create the order
+            order = Order.objects.create(
+                customer=customer,
+                shop=request.user.shop
+            )
+            print('created order')
+
+            # Attempt to add the products to the order
+            for product_data in data['items']:
+                product = Product.objects.get(id=int(product_data['id']))
+                for _ in range(product_data['quantity']):
+                    order.items.add(product)
+            print('added products')
+
+            # This section gives out troubles, fix it
+            # # Attempt to change the status of the order if applicable
+            # if data['status'] and data['status'] in Order.ORDER_OPTIONS:
+            #     order.status = data['status']
+            #     print('changed status')
+            # else:
+            #     raise ValidationError
+            #     # raise ValidationError('Invalid status field.')
+            print('passed status')
+
+            # Validate the order
+            order.full_clean()
+            print('validated')
+
+            order.save()
+            messages = ['Order placed successfuly.']
+            status = 201
+        except ValidationError:
+            messages = ['Invalid field type']
+            status = 400
+        except Exception:
+            messages = ['Bad request.']
+            status = 400
+
+    else:
+        messages = ['Unsuported request method.']
+        status = 405
+    
     return JsonResponse({
         'messages': messages
     }, status=status)
