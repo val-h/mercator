@@ -20,4 +20,7 @@ urlpatterns = [
 
     # Shop
     path('shop/', views.shop, name='shop'),
+
+    # Category - TODO
+    path('categories/', views.categories, name='categories'),
 ]

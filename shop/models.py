@@ -16,6 +16,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description
+        }
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=40)
