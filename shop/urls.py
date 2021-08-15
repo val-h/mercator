@@ -1,26 +1,26 @@
 from django.urls import path
 
-from . import views
+from . import product_views, shop_views, user_views, util_views
 
 app_name = 'shop'
 urlpatterns = [
     # Product
-    path('products/', views.products, name='products'),
-    path('products/<int:id>/', views.product, name='product'),
+    path('products/', product_views.products, name='products'),
+    path('products/<int:id>/', product_views.product, name='product'),
     path( # All reviews for a product
         'products/<int:product_id>/reviews/',
-        views.product_reviews,
+        product_views.product_reviews,
         name='product_reviews'
     ),
     path( # Single review for a product
         'products/<int:product_id>/reviews/<int:review_id>/',
-        views.product_review,
+        product_views.product_review,
         name='product_review'
     ),
 
     # Shop
-    path('shop/', views.shop, name='shop'),
+    path('shop/', shop_views.shop, name='shop'),
 
     # Category - TODO
-    path('categories/', views.categories, name='categories'),
+    path('categories/', util_views.categories, name='categories'),
 ]
