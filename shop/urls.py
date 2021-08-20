@@ -21,6 +21,7 @@ urlpatterns = [
     # Shop
     path('shop/', shop_views.shop, name='shop'),
     path('shop/orders/', shop_views.orders, name='shop_orders'),
+    path('shop/orders/<int:order_id>/', shop_views.order, name='shop_order'),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),

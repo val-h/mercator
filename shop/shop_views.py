@@ -130,15 +130,18 @@ def orders(request):
                     order.items.add(product)
             print('added products')
 
-            # This section gives out troubles, fix it
+            # Probably not even needed her but in the put method
+            # # This section gives out troubles, fix it
             # # Attempt to change the status of the order if applicable
-            # if data['status'] and data['status'] in Order.ORDER_OPTIONS:
-            #     order.status = data['status']
-            #     print('changed status')
-            # else:
-            #     raise ValidationError
-            #     # raise ValidationError('Invalid status field.')
-            print('passed status')
+            # if hasattr(data, 'status'):
+            #     print('passed first check')
+            #     if data['status'] in [option[0] for option in Order.ORDER_OPTIONS]:
+            #         order.status = data['status']
+            #         print('changed status')
+            #     else:
+            #         raise ValidationError
+            #         # raise ValidationError('Invalid status field.')
+            # print('passed status')
 
             # Validate the order
             order.full_clean()
@@ -153,6 +156,48 @@ def orders(request):
         except Exception:
             messages = ['Bad request.']
             status = 400
+
+    else:
+        messages = ['Unsuported request method.']
+        status = 405
+    
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+def order(request, order_id):
+    order = Order.objects.get(id=order_id)
+    if request.method == 'GET':
+        return JsonResponse({
+            'order': order.serialize()
+        }, status=200)
+
+    elif request.method == 'PUT':
+        data = json.loads(request.body)
+        try:
+            # Attempt to update the order
+            for field, value in data.items():
+                if field in Order.CONFIGURABLE_FIELDS:
+                    print(f'setting {field} with value {value}')
+                    setattr(order, field, value)
+
+            # Validate the order
+            order.full_clean()
+
+            order.save()
+            messages = ['Order successfuly updated.']
+            status = 200
+        except ValidationError:
+            messages = ['Invalid field type']
+            status = 400
+        except Exception:
+            messages = ['Bad request.']
+            status = 400
+
+    elif request.method == 'DELETE':
+        order.delete()
+        messages = ['Order successfuly deleted.']
+        status = 200
 
     else:
         messages = ['Unsuported request method.']
