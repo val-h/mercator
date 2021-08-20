@@ -2,6 +2,9 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import json
 
+# Helper
+import traceback
+
 from .models import Shop, Order, Shipment, ShopAnalytics, ShopStyle, Product
 from django.contrib.auth import get_user_model
 
@@ -121,31 +124,20 @@ def orders(request):
                 customer=customer,
                 shop=request.user.shop
             )
-            print('created order')
 
             # Attempt to add the products to the order
             for product_data in data['items']:
                 product = Product.objects.get(id=int(product_data['id']))
                 for _ in range(product_data['quantity']):
                     order.items.add(product)
-            print('added products')
 
-            # Probably not even needed her but in the put method
-            # # This section gives out troubles, fix it
-            # # Attempt to change the status of the order if applicable
-            # if hasattr(data, 'status'):
-            #     print('passed first check')
-            #     if data['status'] in [option[0] for option in Order.ORDER_OPTIONS]:
-            #         order.status = data['status']
-            #         print('changed status')
-            #     else:
-            #         raise ValidationError
-            #         # raise ValidationError('Invalid status field.')
-            # print('passed status')
+            # Update the optional fields
+            for field, value in data.items():
+                if field in Order.CONFIGURABLE_FIELDS:
+                    setattr(order, field, value)
 
             # Validate the order
             order.full_clean()
-            print('validated')
 
             order.save()
             messages = ['Order placed successfuly.']
@@ -178,7 +170,6 @@ def order(request, order_id):
             # Attempt to update the order
             for field, value in data.items():
                 if field in Order.CONFIGURABLE_FIELDS:
-                    print(f'setting {field} with value {value}')
                     setattr(order, field, value)
 
             # Validate the order

@@ -115,6 +115,7 @@ class Order(models.Model):
     DELIVERED = 'DE'
     ORDER_OPTIONS = [
         (PLACED, 'Active'),
+        (CANCELED, 'Canceled'),
         (PROCESSING, 'Processing'),
         (COMPLETE, 'Complete'),
         (DELIVERED, 'Delivered')
