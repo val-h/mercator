@@ -2,9 +2,6 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import json
 
-# Helper
-import traceback
-
 from .models import Shop, Order, Shipment, ShopAnalytics, ShopStyle, Product
 from django.contrib.auth import get_user_model
 
@@ -93,10 +90,11 @@ def shop(request):
     else:
         messages = ['Unsuported request method.']
         status = 405
-        
+
     return JsonResponse({
         'messages': messages
     }, status=status)
+
 
 def orders(request):
     if request.method == 'GET':
@@ -113,7 +111,7 @@ def orders(request):
             status = 404
 
     elif request.method == 'POST':
-        # attributes 
+        # attributes
         # required - customer_id, items: [id, quantity]
         # optional - status: default, Order.PLACED
         data = json.loads(request.body)
@@ -152,32 +150,101 @@ def orders(request):
     else:
         messages = ['Unsuported request method.']
         status = 405
-    
+
     return JsonResponse({
         'messages': messages
     }, status=status)
 
-def order(request, order_id):
-    order = Order.objects.get(id=order_id)
-    if request.method == 'GET':
-        return JsonResponse({
-            'order': order.serialize()
-        }, status=200)
 
-    elif request.method == 'PUT':
+def order(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id)
+    except ObjectDoesNotExist:
+        messages = ['Order with that id does not exist.']
+        status = 404
+    else:
+        if request.method == 'GET':
+            return JsonResponse({
+                'order': order.serialize()
+            }, status=200)
+
+        elif request.method == 'PUT':
+            data = json.loads(request.body)
+            try:
+                # Attempt to update the order
+                for field, value in data.items():
+                    if field in Order.CONFIGURABLE_FIELDS:
+                        setattr(order, field, value)
+
+                # Validate the order
+                order.full_clean()
+
+                order.save()
+                messages = ['Order successfuly updated.']
+                status = 200
+            except ValidationError:
+                messages = ['Invalid field type']
+                status = 400
+            except Exception:
+                messages = ['Bad request.']
+                status = 400
+
+        elif request.method == 'DELETE':
+            order.delete()
+            messages = ['Order successfuly deleted.']
+            status = 200
+
+        else:
+            messages = ['Unsuported request method.']
+            status = 405
+
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+
+def shipments(request):
+    if request.method == 'GET':
+        try:
+            shipments = Shipment.objects.all()
+            if shipments.count() > 0:
+                return JsonResponse({
+                    'shipments': [
+                        shipment.serialize() for shipment in shipments
+                    ]
+                }, status=200)
+            else:
+                raise ObjectDoesNotExist
+        except ObjectDoesNotExist:
+            messages = ['No available shipments for this shop.']
+            status = 404
+
+    elif request.method == 'POST':
         data = json.loads(request.body)
         try:
-            # Attempt to update the order
-            for field, value in data.items():
-                if field in Order.CONFIGURABLE_FIELDS:
-                    setattr(order, field, value)
+            # Get the standing order
+            order = Order.objects.get(id=data['order_id'])
+            # Attempt to create a shipment
+            shipment = Shipment.objects.create(
+                order=order,
+                email=data['email'],
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                company=data['company'],
+                address=data['address'],
+                post_code=data['post_code'],
+                state=data['state'],
+                city=data['city'],
+                country=data['country'],
+                contact_number=data['contact_number']
+            )
 
-            # Validate the order
-            order.full_clean()
+            # Validate the shipment
+            shipment.full_clean()
 
-            order.save()
-            messages = ['Order successfuly updated.']
-            status = 200
+            shipment.save()
+            messages = ['Shipment successfuly created.']
+            status = 201
         except ValidationError:
             messages = ['Invalid field type']
             status = 400
@@ -185,15 +252,60 @@ def order(request, order_id):
             messages = ['Bad request.']
             status = 400
 
-    elif request.method == 'DELETE':
-        order.delete()
-        messages = ['Order successfuly deleted.']
-        status = 200
-
     else:
         messages = ['Unsuported request method.']
         status = 405
-    
+
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+
+def shipment(request, shipment_id):
+    try:
+        shipment = Shipment.objects.get(id=shipment_id)
+    except ObjectDoesNotExist:
+        messages = ['Shipment does not exist.']
+        status = 404
+    except Exception:
+        messages = ['Some wierd exception.']
+        status = 400
+    else:
+        if request.method == 'GET':
+            return JsonResponse({
+                'shipment': shipment.serialize()
+            }, status=200)
+
+        elif request.method == 'PUT':
+            data = json.loads(request.body)
+            try:
+                # Attempt to change the details in the shipment
+                for field, value in data.items():
+                    if field in Shipment.CONFIGURABLE_FIELDS:
+                        setattr(shipment, field, value)
+                
+                # Validate shipment
+                shipment.full_clean()
+
+                shipment.save()
+                messages = ['Shipment successfuly updated.']
+                status = 200
+            except ValidationError:
+                messages = ['Invalid field type']
+                status = 400
+            except Exception:
+                messages = ['Bad request.']
+                status = 400
+
+        elif request.method == 'DELETE':
+            shipment.delete()
+            messages = ['Shipment successfuly deleted.']
+            status = 200
+
+        else:
+            messages = ['Unsuported request method.']
+            status = 405
+
     return JsonResponse({
         'messages': messages
     }, status=status)

@@ -7,12 +7,12 @@ urlpatterns = [
     # Product
     path('products/', product_views.products, name='products'),
     path('products/<int:id>/', product_views.product, name='product'),
-    path( # All reviews for a product
+    path(  # All reviews for a product
         'products/<int:product_id>/reviews/',
         product_views.product_reviews,
         name='product_reviews'
     ),
-    path( # Single review for a product
+    path(  # Single review for a product
         'products/<int:product_id>/reviews/<int:review_id>/',
         product_views.product_review,
         name='product_review'
@@ -22,6 +22,12 @@ urlpatterns = [
     path('shop/', shop_views.shop, name='shop'),
     path('shop/orders/', shop_views.orders, name='shop_orders'),
     path('shop/orders/<int:order_id>/', shop_views.order, name='shop_order'),
+    path('shop/shipments/', shop_views.shipments, name='shop-shipments'),
+    path(
+        'shop/shipments/<int:shipment_id>/',
+        shop_views.shipment,
+        name='shop_shipment'
+    ),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),

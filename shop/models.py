@@ -172,6 +172,7 @@ class Shipment(models.Model):
     post_code = models.CharField(max_length=120)
     state = models.CharField(max_length=80)
     city = models.CharField(max_length=120)
+    country = models.CharField(max_length=40)
     # No RegEx or library for handling phone numbers
     # Add some basic validators and stripping of white spaces
     contact_number = models.CharField(max_length=20)
@@ -190,8 +191,32 @@ class Shipment(models.Model):
         default=MAIL
     )
 
+    CONFIGURABLE_FIELDS = [
+        'company',
+        'address',
+        'post_code',
+        'stete',
+        'city',
+        'country',
+    ]
+
     def __str__(self):
         return f'ID: {self.id}, Order: {self.order}'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'company': self.company,
+            'address': self.address,
+            'post_code': self.post_code,
+            'state': self.state,
+            'city': self.city,
+            'contact_number': self.contact_number,
+            'order': self.order.serialize()
+        }
 
 
 class Cart(models.Model):
