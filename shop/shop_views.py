@@ -322,7 +322,7 @@ def style(request):
             return JsonResponse({
                 'style': style.serialize()
             }, status=200)
-        
+
         elif request.method == 'PUT':
             data = json.loads(request.body)
             try:
@@ -343,7 +343,7 @@ def style(request):
             except Exception:
                 messages = ['Bad request.']
                 status = 400
-        
+
         else:
             messages = ['Unsuported request method.']
             status = 405
@@ -351,6 +351,7 @@ def style(request):
     return JsonResponse({
         'messages': messages
     }, status=status)
+
 
 def analytics(request):
     try:
@@ -389,7 +390,28 @@ def analytics(request):
         else:
             messages = ['Unsuported request method.']
             status = 405
-    
+
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+
+def analytics_product(request, id):
+    try:
+        analytics = ShopAnalytics.objects.get(shop__owner=request.user)
+    except ObjectDoesNotExist:
+        messages = ['Shop does not exist.']
+        status = 404
+    else:
+        if request.method == 'GET':
+            return JsonResponse({
+                'analytics': analytics.serialize_single_product(id)
+            }, status=200)
+
+        else:
+            messages = ['Unsuported request method.']
+            status = 405
+
     return JsonResponse({
         'messages': messages
     }, status=status)

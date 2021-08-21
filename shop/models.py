@@ -324,8 +324,13 @@ class ShopAnalytics(models.Model):
         return {
             'total_products_sold': self.total_products_sold,
             'total_orders': self.total_orders,
-            'shop_visits': self.shop_visits().count(),
-            'product_visits': self.product_visits().count()
+            'total_shop_visits': self.shop_visits().count(),
+            'total_product_visits': self.product_visits().count()
+        }
+
+    def serialize_single_product(self, product_id):
+        return {
+            'product_visits': self.product_visits(product_id).count()
         }
 
 

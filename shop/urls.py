@@ -30,6 +30,11 @@ urlpatterns = [
     ),
     path('shop/style/', shop_views.style, name='shop_style'),
     path('shop/analytics/', shop_views.analytics, name='shop_analytics'),
+    path(
+        'shop/analytics/products/<int:id>',
+        shop_views.analytics_product,
+        name='shop_analytics_product'
+    ),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),
