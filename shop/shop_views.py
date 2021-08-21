@@ -353,4 +353,43 @@ def style(request):
     }, status=status)
 
 def analytics(request):
-    pass
+    try:
+        analytics = ShopAnalytics.objects.get(shop__owner=request.user)
+    except ObjectDoesNotExist:
+        messages = ['Shop does not exist.']
+        status = 404
+    else:
+        if request.method == 'GET':
+            return JsonResponse({
+                'analytics': analytics.serialize()
+            }, status=200)
+
+        # adding it just in case for future fields
+        elif request.method == 'PUT':
+            data = json.loads(request.body)
+            try:
+                # Attempt to update the analytics
+                for field, value in data.items():
+                    if field in ShopAnalytics.CONFIGURABLE_FIELDS:
+                        setattr(analytics, field, value)
+
+                # Validate the analytics
+                analytics.full_clean()
+
+                analytics.save()
+                messages = ['Analytics successfuly updated.']
+                status = 200
+            except ValidationError:
+                messages = ['Invalid field type']
+                status = 400
+            except Exception:
+                messages = ['Bad request.']
+                status = 400
+
+        else:
+            messages = ['Unsuported request method.']
+            status = 405
+    
+    return JsonResponse({
+        'messages': messages
+    }, status=status)

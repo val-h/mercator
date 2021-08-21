@@ -303,6 +303,8 @@ class ShopAnalytics(models.Model):
     total_products_sold = models.IntegerField(default=0)
     total_orders = models.IntegerField(default=0)
 
+    CONFIGURABLE_FIELDS = []
+
     # Just a temporary showcase solution 
     def shop_visits(self):
         query = self.visits.filter(model=Visit.SHOP)
@@ -317,6 +319,14 @@ class ShopAnalytics(models.Model):
 
     def __str__(self):
         return f'{self.shop} - analytics'
+
+    def serialize(self):
+        return {
+            'total_products_sold': self.total_products_sold,
+            'total_orders': self.total_orders,
+            'shop_visits': self.shop_visits().count(),
+            'product_visits': self.product_visits().count()
+        }
 
 
 class ShopStyle(models.Model):
