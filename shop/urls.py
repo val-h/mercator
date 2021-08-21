@@ -41,6 +41,7 @@ urlpatterns = [
     path('user/reviews/', user_views.reviews, name='user-reviews'),
     path('user/orders/', user_views.orders, name='user-orders'),
     path('user/shipments/', user_views.shipments, name='user-shipments'),
+    path('user/cart-items/', user_views.cart_items, name='user-cart'),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),

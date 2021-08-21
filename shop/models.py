@@ -88,6 +88,7 @@ class Product(models.Model):
 
     def serialize_for_user(self):
         return {
+            'id': self.id,
             'title': self.title,
             'description': self.description,
             'price': self.price,
@@ -238,6 +239,7 @@ class Shipment(models.Model):
 
     def serialize_for_user(self):
         return {
+            'id': self.id,
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,
@@ -268,6 +270,11 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.user}\'s Cart'
+
+    def serialize(self):
+        return {
+            'items': [item.serialize_for_user() for item in self.items.all()]
+        }
 
 
 class Review(models.Model):
