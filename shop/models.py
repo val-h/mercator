@@ -236,6 +236,20 @@ class Shipment(models.Model):
             'order': self.order.serialize()
         }
 
+    def serialize_for_user(self):
+        return {
+            'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'company': self.company,
+            'address': self.address,
+            'post_code': self.post_code,
+            'state': self.state,
+            'city': self.city,
+            'contact_number': self.contact_number,
+            'order': self.order.serialize_for_user()
+        }
+
 
 class Cart(models.Model):
     user = models.OneToOneField(

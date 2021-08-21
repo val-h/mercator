@@ -40,6 +40,7 @@ urlpatterns = [
     path('user/', user_views.user, name='user'),
     path('user/reviews/', user_views.reviews, name='user-reviews'),
     path('user/orders/', user_views.orders, name='user-orders'),
+    path('user/shipments/', user_views.shipments, name='user-shipments'),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),

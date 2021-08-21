@@ -91,3 +91,26 @@ def orders(request):
         return JsonResponse({
             'messages': ['Unsuported request method.']
         }, status=405)
+
+
+def shipments(request):
+    user = request.user
+    shipments = Shipment.objects.filter(order__customer=user)
+
+    if request.method == 'GET':
+        if len(shipments) > 0:
+            return JsonResponse({
+                'shipments': [
+                    shipment.serialize_for_user() for shipment in shipments
+                ]
+            }, status=200)
+        
+        else:
+            return JsonResponse({
+                'messages': ['Theree are no shipments from this user.']
+            }, status=404)
+    
+    else:
+        return JsonResponse({
+            'messages': ['Unsuported request method.']
+        }, status=405)
