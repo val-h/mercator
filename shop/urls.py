@@ -36,6 +36,9 @@ urlpatterns = [
         name='shop_analytics_product'
     ),
 
+    # User
+    path('user/', user_views.user, name='user'),
+
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),
 ]
