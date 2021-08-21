@@ -86,6 +86,14 @@ class Product(models.Model):
             'times_bought': self.times_bought
         }
 
+    def serialize_for_user(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'category': self.category
+        }
+
 
 # To be used only with the Product model
 class Image(models.Model):
@@ -151,6 +159,16 @@ class Order(models.Model):
             'customer': self.customer.serialize(),
             'date_ordered': self.date_ordered,
             'items': [product.serialize() for product in self.items.all()]
+        }
+
+    def serialize_for_user(self):
+        return {
+            'id': self.id,
+            'status': self.status,
+            'date_ordered': self.date_ordered,
+            'items': [
+                product.serialize_for_user() for product in self.items.all()
+            ]
         }
 
 
