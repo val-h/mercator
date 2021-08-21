@@ -38,6 +38,7 @@ urlpatterns = [
 
     # User
     path('user/', user_views.user, name='user'),
+    path('user/reviews', user_views.reviews, name='user-reviews'),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),

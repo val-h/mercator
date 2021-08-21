@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 import json
 
 from users.models import CustomUser
+from .models import Review, Shipment, Cart
 
 
 def user(request):
@@ -48,3 +49,25 @@ def user(request):
     return JsonResponse({
         'messages': messages
     }, status=status)
+
+
+def reviews(request):
+    user = request.user
+    reviews = Review.objects.filter(user=user)
+
+    if request.method == 'GET':
+        if len(reviews) > 0:
+            return JsonResponse({
+                'reviews': [review.serialize() for review in reviews]
+            }, status=200)
+        
+        else:
+            return JsonResponse({
+                'messages': ['Theree are no freviews from this user.']
+            }, status=404)
+
+    else:
+        return JsonResponse({
+            'messages': ['Unsuported request method.']
+        }, status=405)
+
