@@ -283,7 +283,7 @@ def shipment(request, shipment_id):
                 for field, value in data.items():
                     if field in Shipment.CONFIGURABLE_FIELDS:
                         setattr(shipment, field, value)
-                
+
                 # Validate shipment
                 shipment.full_clean()
 
@@ -309,3 +309,48 @@ def shipment(request, shipment_id):
     return JsonResponse({
         'messages': messages
     }, status=status)
+
+
+def style(request):
+    try:
+        style = ShopStyle.objects.get(shop__owner=request.user)
+    except ObjectDoesNotExist:
+        messages = ['Shop does not exist.']
+        status = 404
+    else:
+        if request.method == 'GET':
+            return JsonResponse({
+                'style': style.serialize()
+            }, status=200)
+        
+        elif request.method == 'PUT':
+            data = json.loads(request.body)
+            try:
+                # Attempt to update the style
+                for field, value in data.items():
+                    if field in ShopStyle.CONFIGURABLE_FIELDS:
+                        setattr(style, field, value)
+
+                # Validate the style
+                style.full_clean()
+
+                style.save()
+                messages = ['Style successfuly updated.']
+                status = 200
+            except ValidationError:
+                messages = ['Invalid field type']
+                status = 400
+            except Exception:
+                messages = ['Bad request.']
+                status = 400
+        
+        else:
+            messages = ['Unsuported request method.']
+            status = 405
+
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+def analytics(request):
+    pass

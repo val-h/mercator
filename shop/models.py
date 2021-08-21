@@ -351,8 +351,31 @@ class ShopStyle(models.Model):
         default=None
     )
 
+    CONFIGURABLE_FIELDS = [
+        'logo',
+        'background_style',
+        'first_theme_color',
+        'second_theme_color',
+        'third_theme_color',
+        'background_color',
+        'background_image'
+    ]
+
     def __str__(self):
         return f'{self.shop} - style'
+
+    def serialize(self):
+        data = {
+            'logo': self.logo.url,
+            'background_style': self.background_style,
+            'first_theme_color': self.first_theme_color,
+            'second_theme_color': self.second_theme_color,
+            'third_theme_color': self.third_theme_color,
+            'background_color': self.background_color
+        }
+        if self.background_image:
+            data['background_image'] = self.background_image.url
+        return data
 
 
 class Shop(models.Model):

@@ -22,12 +22,14 @@ urlpatterns = [
     path('shop/', shop_views.shop, name='shop'),
     path('shop/orders/', shop_views.orders, name='shop_orders'),
     path('shop/orders/<int:order_id>/', shop_views.order, name='shop_order'),
-    path('shop/shipments/', shop_views.shipments, name='shop-shipments'),
+    path('shop/shipments/', shop_views.shipments, name='shop_shipments'),
     path(
         'shop/shipments/<int:shipment_id>/',
         shop_views.shipment,
         name='shop_shipment'
     ),
+    path('shop/style/', shop_views.style, name='shop_style'),
+    path('shop/analytics/', shop_views.analytics, name='shop_analytics'),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),
