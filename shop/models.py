@@ -34,7 +34,7 @@ class Tag(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    # Images will be a sequenceof seperate models
+    # Images will be a sequence of sepаrate models
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
     quantity = models.IntegerField(default=1)
     category = models.ForeignKey(
@@ -202,7 +202,7 @@ class Shipment(models.Model):
     SHIPPING_METHODS = [
         (MAIL, 'Mail'),
         (PARCEL_DELIVERY, 'Parcel Delivery Company'),
-        (JEFF_BEZOS, 'Jeff Bezos with a bycicle (cheapest)')
+        (JEFF_BEZOS, 'Jeff Bezos with a bиcicle (cheapest)')
     ]
     shipping_method = models.CharField(
         max_length=2,
@@ -314,8 +314,8 @@ class Review(models.Model):
 class Visit(models.Model):
     """
     Helper model for the analytics of every shop.
-    
-    Provides just the basic 
+
+    Provides just the basic
     """
     date = models.DateTimeField(auto_now_add=True)
     shop_analytics = models.ForeignKey(
@@ -326,7 +326,7 @@ class Visit(models.Model):
         related_name='visits'
     )
 
-    # GenericForeginKey and ContentType are things that exist
+    # GenericForeignKey and ContentType are things that exist
     # For future projects, look them up
     PRODUCT = 'P'
     SHOP = 'S'

@@ -1,6 +1,6 @@
 from django.test import TestCase
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.conf import settings
+# from django.core.files.uploadedfile import SimpleUploadedFile
+# from django.conf import settings
 from django.contrib.auth import get_user_model
 # from PIL import Image as pil_Image
 # import io
@@ -11,12 +11,12 @@ from .models import (
     Order,
     Shipment,
     Category,
-    Cart,
+    # Cart,
     Tag,
     Review,
     Shop,
     ShopStyle,
-    ShopAnalytics,
+    # ShopAnalytics,
     Visit
 )
 
@@ -27,14 +27,15 @@ User = get_user_model()
 def _create_customer(
         username='test',
         password='testPass123',
-    ):
-    
+        ):
+
     customer = User.objects.create(
         username=username,
         password=password,
         email=f'{username}@mercator.xyz'
     )
     return customer
+
 
 # def _create_merchant(): obscolete
 #     merchant = User.objects.create(
@@ -44,6 +45,7 @@ def _create_customer(
 #         account_type=User.MERCHANT
 #     )
 #     return merchant
+
 
 def _create_shop(owner: User, points=0, analytics=None, style=None) -> Shop:
     shop = Shop.objects.create(
@@ -65,8 +67,8 @@ class ProductTests(TestCase):
         self.reading_tag = Tag.objects.create(name='reading')
         self.book_product = Product.objects.create(
             title='Lord of the Rings:The Fellowship of the Ring',
-            description="""A meek Hobbit from the Shire and eight companions 
-            set out on a journey to destroy the powerful One Ring and save 
+            description="""A meek Hobbit from the Shire and eight companions
+            set out on a journey to destroy the powerful One Ring and save
             Middle-earth from the Dark Lord Sauron.""",
             category=self.book_category,
             price=29.99,
@@ -99,8 +101,8 @@ class ProductTests(TestCase):
     def test_product_description(self):
         self.assertEqual(
             self.book_product.description,
-            """A meek Hobbit from the Shire and eight companions 
-            set out on a journey to destroy the powerful One Ring and save 
+            """A meek Hobbit from the Shire and eight companions
+            set out on a journey to destroy the powerful One Ring and save
             Middle-earth from the Dark Lord Sauron."""
         )
         self.assertEqual(
@@ -162,20 +164,8 @@ class ImageTests(TestCase):
             shop=self.shop
         )
 
-        # image_file = io.BytesIO(f'{settings.MEDIA_ROOT}/images/LotR_FotR.jpg')
         self.book_image = Image.objects.create(
             product=self.product,
-
-            # custom image upload is giving me troubles atm, will research it
-
-            # image=SimpleUploadedFile(
-            #     name='LotR_FotR.jpg',
-            #     content=open(settings.MEDIA_ROOT + '/images/LotR_FotR.jpg'),
-            #     content_type='image/jpeg')
-
-            # doesn't actually open it, throws an error
-            # image=pil_Image.open(image_file)
-            # image=pil_Image.open(f'{settings.MEDIA_ROOT}/images/LotR_FotR.jpg')
         )
 
     def test_image_product(self):
@@ -234,7 +224,7 @@ class OrderTests(TestCase):
         self.assertEqual(self.order.status, 'DE')
         self.order.status = Order.CANCELED
         self.assertEqual(self.order.status, 'CA')
-    
+
     def test_order_shop(self):
         self.assertTrue(self.order.shop)
         self.assertEqual(self.order.shop.owner.username, 'mercator')
@@ -390,6 +380,7 @@ class ShopTests(TestCase):
     # Created with signals
     def test_shop_analytics(self):
         self.assertTrue(self.shop.analytics)
+
     def test_shop_style(self):
         self.assertTrue(self.shop.style)
 
@@ -447,7 +438,7 @@ class AnalyticsTests(TestCase):
 
     def _create_visit(self, model: Visit.MODEL_CHOICES, model_id: int):
         visit = Visit.objects.create(
-            shop_analytics = self.shop.analytics,
+            shop_analytics=self.shop.analytics,
             model=model,
             model_id=model_id
         )

@@ -1,10 +1,10 @@
 from django.http import JsonResponse
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.contrib.auth import logout
 import json
 
 from users.models import CustomUser
-from .models import Review, Order, Shipment, Cart, Product
+from .models import Review, Order, Shipment, Product
 
 
 def user(request):
@@ -27,7 +27,7 @@ def user(request):
             user.full_clean()
 
             user.save()
-            messages = ['User successfuly updated.']
+            messages = ['User  updated.']
             status = 200
         except ValidationError:
             messages = ['Invalid field type.']
@@ -39,11 +39,11 @@ def user(request):
     elif request.method == 'DELETE':
         logout(user)
         user.delete()
-        messages = ['User successfuly deleted.']
+        messages = ['User  deleted.']
         status = 200
 
     else:
-        messages = ['Unsuported request method.']
+        messages = ['Unsupported request method.']
         status = 405
 
     return JsonResponse({
@@ -60,15 +60,15 @@ def reviews(request):
             return JsonResponse({
                 'reviews': [review.serialize() for review in reviews]
             }, status=200)
-        
+
         else:
             return JsonResponse({
-                'messages': ['Theree are no reviews from this user.']
+                'messages': ['There are no reviews from this user.']
             }, status=404)
 
     else:
         return JsonResponse({
-            'messages': ['Unsuported request method.']
+            'messages': ['Unsupported request method.']
         }, status=405)
 
 
@@ -81,15 +81,15 @@ def orders(request):
             return JsonResponse({
                 'orders': [order.serialize_for_user() for order in orders]
             }, status=200)
-        
+
         else:
             return JsonResponse({
-                'messages': ['Theree are no orders from this user.']
+                'messages': ['There are no orders from this user.']
             }, status=404)
-    
+
     else:
         return JsonResponse({
-            'messages': ['Unsuported request method.']
+            'messages': ['Unsupported request method.']
         }, status=405)
 
 
@@ -104,15 +104,15 @@ def shipments(request):
                     shipment.serialize_for_user() for shipment in shipments
                 ]
             }, status=200)
-        
+
         else:
             return JsonResponse({
-                'messages': ['Theree are no shipments from this user.']
+                'messages': ['There are no shipments from this user.']
             }, status=404)
-    
+
     else:
         return JsonResponse({
-            'messages': ['Unsuported request method.']
+            'messages': ['Unsupported request method.']
         }, status=405)
 
 
@@ -125,7 +125,7 @@ def cart_items(request):
             return JsonResponse({
                 'cart-items': cart_items
             }, status=200)
-        
+
         else:
             return JsonResponse({
                 'messages': ['There are no items in the cart of the user.']
@@ -138,7 +138,7 @@ def cart_items(request):
             if 'items_to_remove' in data:
                 for item_id in data['items_to_remove']:
                     user.cart.items.remove(Product.objects.get(id=item_id))
-                    
+
             if 'items_to_add' in data:
                 for item_id in data['items_to_add']:
                     user.cart.items.add(Product.objects.get(id=item_id))
@@ -147,7 +147,7 @@ def cart_items(request):
             user.cart.full_clean()
 
             user.cart.save()
-            messages = ['Cart successfuly updated.']
+            messages = ['Cart  updated.']
             status = 200
         except ValidationError:
             messages = ['Invalid field type']
@@ -159,12 +159,12 @@ def cart_items(request):
     # Just clear the cart
     elif request.method == 'DELETE':
         user.cart.clear()
-        messages = ['Cart successfuly cleared.']
+        messages = ['Cart  cleared.']
         status = 200
 
     else:
         return JsonResponse({
-            'messages': ['Unsuported request method.']
+            'messages': ['Unsupported request method.']
         }, status=405)
 
     return JsonResponse({
