@@ -55,7 +55,7 @@ class Product(models.Model):
     shop = models.ForeignKey(
         'Shop',
         on_delete=models.CASCADE,
-        related_name='products'    
+        related_name='products'
     )
 
     # Utils
@@ -344,7 +344,7 @@ class ShopAnalytics(models.Model):
 
     CONFIGURABLE_FIELDS = []
 
-    # Just a temporary showcase solution 
+    # Just a temporary showcase solution
     def shop_visits(self):
         query = self.visits.filter(model=Visit.SHOP)
         return query

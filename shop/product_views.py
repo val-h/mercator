@@ -36,7 +36,7 @@ def products(request):
             new_product.full_clean()
 
             new_product.save()
-            messages =  ['Product successfuly created.']
+            messages = ['Product successfuly created.']
             status = 201
         except ValidationError:
             # Send back a message with specific field validation errors
@@ -57,6 +57,7 @@ def products(request):
         return JsonResponse({
             'messages': 'Unsuported request method.'
         }, status=405)
+
 
 def product(request, id):
     try:
@@ -84,7 +85,7 @@ def product(request, id):
                 for field, value in data.items():
                     if field in Product.CONFIGURABLE_FIELDS:
                         setattr(product, field, value)
-                
+
                 # Validate the product
                 product.full_clean()
 
@@ -103,14 +104,15 @@ def product(request, id):
             product.delete()
             messages = ['Product successfuly deleted.']
             status = 200
-            
+
         else:
             messages = ['Unsuported request method.']
             status = 405
-    
+
     return JsonResponse({
         'messages': messages
     }, status=status)
+
 
 def product_reviews(request, product_id):
     if request.method == 'GET':
@@ -155,6 +157,7 @@ def product_reviews(request, product_id):
         'messages': messages
     }, status=status)
 
+
 def product_review(request, product_id, review_id):
     try:
         review = Review.objects.get(id=review_id)
@@ -196,7 +199,7 @@ def product_review(request, product_id, review_id):
         else:
             messages = ['Unsuported request method.']
             status = 405
-    
+
     return JsonResponse({
         'messages': messages
     }, status=status)

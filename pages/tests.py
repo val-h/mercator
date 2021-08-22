@@ -1,7 +1,7 @@
 from django.test import TestCase, SimpleTestCase, Client
 from django.urls import reverse, resolve
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AnonymousUser
+# from django.contrib.auth.models import AnonymousUser
 
 from . import views
 from shop.models import Shop
@@ -42,7 +42,7 @@ class CategoriesPageTests(SimpleTestCase):
 
     def test_categories_template(self):
         self.assertTemplateUsed(self.page, 'categories.html')
-    
+
     def test_categories_url_view_resolve(self):
         page_view = resolve('/categories/')
         self.assertEqual(page_view.func.__name__, views.categories.__name__)
@@ -137,7 +137,8 @@ class AccountPageTests(TestCase):
 
 class SearchPageTests(SimpleTestCase):
     def setUp(self):
-        self.page = self.client.get(reverse('pages:search', kwargs={'pattern': 'keyword7'}))
+        self.page = self.client.get(
+            reverse('pages:search', kwargs={'pattern': 'keyword7'}))
 
     def test_search_url_name(self):
         self.assertEqual(self.page.status_code, 200)
@@ -150,7 +151,7 @@ class SearchPageTests(SimpleTestCase):
 
     def test_search_does_not_contain_html(self):
         self.assertNotContains(self.page, 'keyword531')
-    
+
     def test_search_url_view_resolve(self):
         page_view = resolve('/search/keyword')
         self.assertEqual(page_view.func.__name__, views.search.__name__)

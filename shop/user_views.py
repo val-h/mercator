@@ -163,9 +163,46 @@ def cart_items(request):
         status = 200
 
     else:
+        messages = ['Unsupported request method.']
+        status = 405
+
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+
+def user_type(request):
+    if request.method == 'GET':
         return JsonResponse({
-            'messages': ['Unsupported request method.']
-        }, status=405)
+            'account_type': request.user.get_account_type_display()
+        }, status=200)
+
+    elif request.method == 'PUT':
+        data = json.loads(request.body)
+        try:
+            # Attempt to change the user type
+            if 'account_type' in data:
+                if data['account_type'].lower() == 'customer':
+                    request.user.convert_to_customer()
+                elif data['account_type'].lower() == 'merchant':
+                    request.user.convert_to_merchant()
+
+            # Validate user
+            request.user.full_clean()
+
+            request.user.save()
+            messages = ['Account type successfully changed.']
+            status = 200
+        except ValidationError:
+            messages = ['Invalid field type.']
+            status = 400
+        except Exception:
+            messages = ['Bad request.']
+            status = 400
+
+    else:
+        messages = ['Unsupported request method.']
+        status = 405
 
     return JsonResponse({
         'messages': messages

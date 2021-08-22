@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.db import IntegrityError
 
 from .forms import CustomUserCreateForm
@@ -21,17 +21,17 @@ def register(request):
         confirmation = request.POST["password2"]
         if password != confirmation:
             return render(request, 'registration/register.html', {
-                'form': CustomUserCreateForm(request.POST), # prefiled
+                'form': CustomUserCreateForm(request.POST),  # prefiled
                 'message': 'Passwords must match.'
             })
-        
+
         # Attempt to create a new user
         try:
             user = CustomUser.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
             return render(request, 'registration/register.html', {
-                'form': CustomUserCreateForm(request.POST), # prefiled
+                'form': CustomUserCreateForm(request.POST),  # prefiled
                 'message': 'Username already taken.'
             })
         login(request, user)

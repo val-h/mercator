@@ -9,8 +9,8 @@ from .models import (
     Shop,
     ShopAnalytics,
     ShopStyle,
-    Visit,
-    Product,
+    # Visit,
+    # Product,
     Cart
 )
 
@@ -39,7 +39,7 @@ def _on_shop_deleted(sender, instance, **kwargs):
     # print(kwargs)
     # print(f'Deleting {instance}...')
     # print(f'Deleting existing helper Models for {instance}')
-    
+
     # Delete shop analytics
     if instance.analytics:
         instance.analytics.delete()
@@ -55,6 +55,7 @@ def _on_shop_deleted(sender, instance, **kwargs):
 def _on_user_created(sender, instance, created, **kwargs):
     if created:
         _ = Cart.objects.create(user=instance)
+
 
 @receiver(pre_delete, sender=User)
 def _on_user_deleted(sender, instance, **kwargs):

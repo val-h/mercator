@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
 
     # preferences = models.ForeignKey()
 
-    CONFIGURABLE_FIELDS = ['username']
+    CONFIGURABLE_FIELDS = ['username', 'account_type']
 
     def __str__(self):
         return f'{self.username}'

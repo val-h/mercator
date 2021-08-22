@@ -1,5 +1,5 @@
 from pathlib import Path
-import os
+# import os
 from environs import Env
 
 # Default vars are for production
@@ -15,8 +15,8 @@ DEBUG = env.bool('DJANGO_DEBUG', default=False)
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '192.168.0.29', # local network access
-    '.herokuapp.com', # heroku deployments
+    '192.168.0.29',  # local network access
+    '.herokuapp.com',  # heroku deployments
     # real ip address, for global access
     ]
 
@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'mercator.wsgi.application'
 
 DATABASES = {
     'default': env.dj_db_url(
-        'DATABASE_URL', # created by heroku on deploy
+        'DATABASE_URL',  # created by heroku on deploy
         default='postgres://postgres@db/postgres')
 }
 
@@ -129,7 +129,7 @@ STATICFILES_DIRS = [
     str(BASE_DIR.joinpath('static')),
 ]
 STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
-STATICFILE_FINDERS = [ # Optional
+STATICFILE_FINDERS = [  # Optional
     # Looks within STATICFILES_DIRS
     "django.contrib.staticfiles.finders.FileSystemFinder",
     # Looks within app directories

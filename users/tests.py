@@ -25,7 +25,7 @@ class CustomUserTests(TestCase):
         self.assertFalse(user.is_superuser)
         self.assertEqual(user.total_items_bought, 7)
         self.assertEqual(user.total_reviews, 2)
-        self.assertEqual(user.account_type, 'C') # Default
+        self.assertEqual(user.account_type, 'C')  # Default
 
     def test_create_superuser(self):
         User = get_user_model()
