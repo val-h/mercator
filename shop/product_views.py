@@ -30,7 +30,7 @@ def products(request):
                 title=data['title'],
                 description=data['description'],
                 price=data['price'],
-                quantity=data['quantity'])
+                available_quantity=data['quantity'])
 
             # Validate the product
             new_product.full_clean()

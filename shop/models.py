@@ -34,8 +34,8 @@ class Tag(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    # Images will be a sequence of sepаrate models
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    # This more specific name cost me a bit too much refactoring
     available_quantity = models.IntegerField(default=1)
     category = models.ForeignKey(
         Category,
@@ -59,7 +59,8 @@ class Product(models.Model):
     )
 
     # Utils
-    CONFIGURABLE_FIELDS = ['price', 'quantity', 'description', 'title']
+    CONFIGURABLE_FIELDS = [
+        'price', 'available_quantity', 'description', 'title']
 
     class Meta:
         ordering = ['-date_created']
