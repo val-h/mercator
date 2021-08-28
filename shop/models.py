@@ -36,7 +36,7 @@ class Product(models.Model):
     description = models.TextField()
     # Images will be a sequence of sepаrate models
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
-    quantity = models.IntegerField(default=1)
+    available_quantity = models.IntegerField(default=1)
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
@@ -80,7 +80,7 @@ class Product(models.Model):
             'title': self.title,
             'description': self.description,
             'price': self.price,
-            'quantity': self.quantity,
+            'available_quantity': self.available_quantity,
             'category': self.category,
             'shop': self.shop.serialize(),
             'times_bought': self.times_bought
@@ -110,13 +110,33 @@ class Image(models.Model):
         return f'{self.product.title}\'s image'
 
 
-class Order(models.Model):
-    items = models.ManyToManyField(
-        Product,
-        blank=True,
-        related_name='all_orders'
-    )
+class Item(models.Model):
+    '''Wrapper model containing a product and its quantity.'''
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='in_items')
+    quantity = models.PositiveIntegerField(default=1)
+    cart = models.ForeignKey(
+        'Cart',
+        on_delete=models.CASCADE, null=True, blank=True, related_name='items')
+    order = models.ForeignKey(
+        'Order',
+        on_delete=models.CASCADE, null=True, blank=True, related_name='items')
 
+    class Meta:
+        ordering = ['product']
+
+    def __str__(self):
+        return f'{self.product}\'s item wrapper.'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "product": self.product.serialize_for_user(),
+            "cart": self.cart.serialize()
+        }
+
+
+class Order(models.Model):
     PLACED = 'PL'
     CANCELED = 'CA'
     PROCESSING = 'PR'
@@ -159,7 +179,7 @@ class Order(models.Model):
             'shop': self.shop.serialize(),
             'customer': self.customer.serialize(),
             'date_ordered': self.date_ordered,
-            'items': [product.serialize() for product in self.items.all()]
+            'items': [item.product.serialize() for item in self.items.all()]
         }
 
     def serialize_for_user(self):
@@ -168,7 +188,7 @@ class Order(models.Model):
             'status': self.status,
             'date_ordered': self.date_ordered,
             'items': [
-                product.serialize_for_user() for product in self.items.all()
+                item.product.serialize_for_user() for item in self.items.all()
             ]
         }
 
@@ -202,7 +222,7 @@ class Shipment(models.Model):
     SHIPPING_METHODS = [
         (MAIL, 'Mail'),
         (PARCEL_DELIVERY, 'Parcel Delivery Company'),
-        (JEFF_BEZOS, 'Jeff Bezos with a bиcicle (cheapest)')
+        (JEFF_BEZOS, 'Jeff Bezos with a bicycle (cheapest)')
     ]
     shipping_method = models.CharField(
         max_length=2,
@@ -253,16 +273,12 @@ class Shipment(models.Model):
         }
 
 
+# Fix API endpoints since the product passing was refactored with Item
 class Cart(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.DO_NOTHING,
         related_name='cart'
-    )
-    items = models.ManyToManyField(
-        Product,
-        blank=True,
-        related_name='in_carts'
     )
 
     def clear(self):
@@ -272,9 +288,13 @@ class Cart(models.Model):
         return f'{self.user}\'s Cart'
 
     def serialize(self):
-        return {
-            'items': [item.serialize_for_user() for item in self.items.all()]
-        }
+        items = {}
+        for i, item in enumerate(self.items.all()):
+            items[i] = {
+                'product': item.product.serialize_for_user(),
+                'quantity': item.quantity
+            }
+        return items
 
 
 class Review(models.Model):

@@ -4,7 +4,7 @@ from django.contrib.auth import logout
 import json
 
 from users.models import CustomUser
-from .models import Review, Order, Shipment, Product
+from .models import Review, Order, Shipment, Product, Item
 
 
 def user(request):
@@ -121,7 +121,7 @@ def cart_items(request):
 
     if request.method == 'GET':
         cart_items = user.cart.serialize()
-        if len(cart_items['items']) > 0:
+        if len(cart_items) > 0:
             return JsonResponse({
                 'cart-items': cart_items
             }, status=200)
@@ -133,27 +133,60 @@ def cart_items(request):
 
     elif request.method == 'PUT':
         data = json.loads(request.body)
+        messages = []
         try:
+            # O(n2) - look for a more elegant way to solve this for both
+
             # Attempt to update the cart
             if 'items_to_remove' in data:
-                for item_id in data['items_to_remove']:
-                    user.cart.items.remove(Product.objects.get(id=item_id))
+                for item_details in data['items_to_remove']:
+                    for item in user.cart.items.all():
+                        if item_details['id'] == item.product.id:
+                            item.quantity -= int(item_details['quantity'])
+                            if item.quantity < 1:
+                                # Remove the item from the cart and delkete it
+                                user.cart.items.remove(item)
+                                item.delete()
+                            else:
+                                # Validate and save the item
+                                item.full_clean()
+                                item.save()
 
+            # Update works, refine it and refactor the other endpoints
             if 'items_to_add' in data:
-                for item_id in data['items_to_add']:
-                    user.cart.items.add(Product.objects.get(id=item_id))
+                for item_details in data['items_to_add']:
+                    for item in user.cart.items.all():
+                        if item_details['id'] == item.product.id:
+                            item.quantity += int(item_details['quantity'])
+                            if item.quantity > item.product.available_quantity:
+                                messages += ['Not enough ']
+                                raise Exception
+                            # Validate and save the item
+                            item.full_clean()
+                            item.save()
+                        else:
+                            item = Item.objects.create(
+                                product=Product.objects.get(
+                                    id=item_details['id']
+                                ),
+                                quantity=item_details['quantity'],
+                                cart=user.cart
+                            )
+                            # Validate the item
+                            item.full_clean()
+                            user.cart.items.add(item)
 
             # Validate cart
             user.cart.full_clean()
 
             user.cart.save()
-            messages = ['Cart  updated.']
+            messages += ['Cart updated.']
             status = 200
         except ValidationError:
-            messages = ['Invalid field type']
+            messages += ['Invalid field type']
             status = 400
         except Exception:
-            messages = ['Bad request.']
+            messages += ['Bad request.']
             status = 400
 
     # Just clear the cart

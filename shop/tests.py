@@ -12,6 +12,7 @@ from .models import (
     Shipment,
     Category,
     # Cart,
+    Item,
     Tag,
     Review,
     Shop,
@@ -72,7 +73,7 @@ class ProductTests(TestCase):
             Middle-earth from the Dark Lord Sauron.""",
             category=self.book_category,
             price=29.99,
-            quantity=75,
+            available_quantity=75,
             shop=self.shop
         )  # Add more images to this product
         self.book_cover = Image.objects.create(
@@ -84,7 +85,7 @@ class ProductTests(TestCase):
             title='Rose',
             description='A beautiful red rose.',
             price=3.50,
-            quantity=1001,
+            available_quantity=1001,
             shop=self.shop
         )
         self.flower_photo = Image.objects.create(
@@ -123,8 +124,8 @@ class ProductTests(TestCase):
         self.assertEqual(self.flower_product.price, 3.50)
 
     def test_product_quantity(self):
-        self.assertEqual(self.book_product.quantity, 75)
-        self.assertEqual(self.flower_product.quantity, 1001)
+        self.assertEqual(self.book_product.available_quantity, 75)
+        self.assertEqual(self.flower_product.available_quantity, 1001)
 
     def test_product_category(self):
         self.assertEqual(self.book_product.category.name, 'Books')
@@ -170,7 +171,7 @@ class ImageTests(TestCase):
 
     def test_image_product(self):
         self.assertEqual(self.book_image.product.title, 'LotR')
-        self.assertEqual(self.book_image.product.quantity, 1)
+        self.assertEqual(self.book_image.product.available_quantity, 1)
 
     def test_image_file_upload(self):
         # default image at least works
@@ -187,15 +188,23 @@ class OrderTests(TestCase):
         self.customer = _create_customer()
         self.merchant = _create_customer(username='mercator')
         self.shop = _create_shop(self.merchant)
-        self.item1 = Product.objects.create(
+        self.product1 = Product.objects.create(
             title='Random Book',
             description='Random Book Description',
             shop=self.shop
         )
-        self.item2 = Product.objects.create(
+        self.product2 = Product.objects.create(
             title='Random Shirt',
             description='Random Shirt Description',
             shop=self.shop
+        )
+        self.item1 = Item.objects.create(
+            product=self.product1,
+            quantity=7
+        )
+        self.item2 = Item.objects.create(
+            product=self.product2,
+            quantity=77
         )
         self.order = Order.objects.create(
             customer=self.customer,
@@ -211,8 +220,9 @@ class OrderTests(TestCase):
         self.order.items.add(self.item2)
         # Changed the product ordering from Meta class
         # Now newer products are set first
-        self.assertEqual(self.order.items.first().title, 'Random Shirt')
-        self.assertEqual(self.order.items.last().title, 'Random Book')
+        self.assertEqual(
+            self.order.items.first().product.title, 'Random Shirt')
+        self.assertEqual(self.order.items.last().product.title, 'Random Book')
 
     def test_order_status_change(self):
         self.assertEqual(self.order.status, 'PL')  # Order.PLACED by default
@@ -286,7 +296,7 @@ class ShipmentTests(TestCase):
         self.assertEqual(self.shipment.shipping_method, 'JB')
         self.assertEqual(
             self.shipment.get_shipping_method_display(),
-            'Jeff Bezos with a bycicle (cheapest)')
+            'Jeff Bezos with a bicycle (cheapest)')
 
     def test_shipment_order_add(self):
         self.shipment.order = self.order
@@ -300,15 +310,23 @@ class CartTests(TestCase):
         self.customer = _create_customer()
         self.merchant = _create_customer(username='mercator')
         self.shop = _create_shop(owner=self.merchant)
-        self.item1 = Product.objects.create(
+        self.product1 = Product.objects.create(
             title='Smartphone',
             description='Just a regular smartphone',
             shop=self.shop
         )
-        self.item2 = Product.objects.create(
+        self.product2 = Product.objects.create(
             title='Flask',
             description='Pretty cool flask for water.',
             shop=self.shop
+        )
+        self.item1 = Item.objects.create(
+            product=self.product1,
+            quantity=7
+        )
+        self.item2 = Item.objects.create(
+            product=self.product2,
+            quantity=77
         )
         # Dodging a bullet, i need the var so tests don't break
         self.cart = self.customer.cart
@@ -320,7 +338,8 @@ class CartTests(TestCase):
     def test_cart_item_add(self):
         self.assertFalse(self.cart.items.first())
         self.cart.items.add(self.item1)
-        self.assertEqual(self.cart.items.first().title, 'Smartphone')
+        self.assertEqual(self.cart.items.first().product.title, 'Smartphone')
+        self.assertEqual(self.cart.items.first().quantity, 7)
         self.assertTrue(self.cart.items.first())
 
     def test_cart_item_remove(self):
@@ -328,6 +347,11 @@ class CartTests(TestCase):
         self.assertTrue(self.cart.items.first())
         self.cart.items.remove(self.item1)
         self.assertFalse(self.cart.items.first())
+
+    def test_cart_item_quantity(self):
+        self.cart.items.add(self.item1, self.item2)
+        self.assertEqual(self.cart.items.first().quantity, 77)
+        self.assertEqual(self.cart.items.last().quantity, 7)
 
     def test_cart_clear(self):
         self.cart.items.add(self.item1, self.item2)
