@@ -4,12 +4,16 @@ from django.urls import reverse, resolve
 
 from .forms import CustomUserCreateForm
 from . import views
+from .models import Preference
+from shop.models import Category
+
+
+User = get_user_model()
 
 
 class CustomUserTests(TestCase):
 
     def test_create_user(self):
-        User = get_user_model()
         user = User.objects.create_user(
             username='test',
             password='testpass123',
@@ -68,3 +72,27 @@ class RegisterPageTest(TestCase):
     def test_register_view(self):
         view = resolve('/auth/register/')
         self.assertEqual(view.func.__name__, views.register.__name__)
+
+
+class PreferenceTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='customer',
+            password='testpass123',
+            email='customer@example.com'
+        )
+        self.category = Category.objects.create(name='Example')
+
+    def test_user_preference_created(self):
+        self.assertTrue(self.user.preferences.first())
+
+    def test_user_preference_category(self):
+        self.assertEqual(self.user.preferences.first().category, self.category)
+
+    def test_user_preference_update_method(self):
+        preference = self.user.preferences.first()
+        self.assertFalse(preference.last_search)
+        self.assertEqual(preference.search_modifier, 0)
+        preference.update()
+        self.assertTrue(preference.last_search)
+        self.assertEqual(preference.search_modifier, 1)

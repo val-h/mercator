@@ -9,10 +9,13 @@ from .models import (
     Shop,
     ShopAnalytics,
     ShopStyle,
+    Category,
     # Visit,
     # Product,
     Cart
 )
+
+from users.models import Preference
 
 User = get_user_model()
 
@@ -62,6 +65,25 @@ def _on_user_deleted(sender, instance, **kwargs):
     # Clear and Remove the cart
     instance.cart.clear()
     instance.cart.delete()
+
+
+# On each new category created, make a preference for each yser
+@receiver(post_save, sender=Category)
+def _on_category_created(sender, instance, created, **kwargs):
+    if created:
+        users = User.objects.all()
+        for user in users:
+            Preference.objects.create(
+                user=user,
+                category=instance,
+            )
+
+
+@receiver(pre_delete, sender=Category)
+def _on_category_deleted(sender, instance, **kwargs):
+    for user in User.objects.all():
+        preference = user.preferences.get(category=instance)
+        preference.delete()
 
 
 # curcular import, these signals are probably not even needed
