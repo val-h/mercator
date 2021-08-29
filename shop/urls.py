@@ -43,6 +43,7 @@ urlpatterns = [
     path('user/shipments/', user_views.shipments, name='user-shipments'),
     path('user/cart-items/', user_views.cart_items, name='user-cart'),
     path('user/type/', user_views.user_type, name='user-type'),
+    path('user/preferences/', user_views.preferences, name='preferences'),
 
     # Category - TODO
     path('categories/', util_views.categories, name='categories'),

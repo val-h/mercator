@@ -62,6 +62,8 @@ class Preference(models.Model):
     search_modifier = models.PositiveSmallIntegerField(
         default=0, validators=[validate_preference_search_modifier])  # max 5
 
+    CONFIGURABLE_FIELDS = ['user_value']
+
     def __str__(self):
         return f'{self.user}\'s {self.category} category preference.'
 
@@ -85,3 +87,11 @@ class Preference(models.Model):
         # Validate and save the preference
         self.full_clean()
         self.save()
+
+    def serialize(self):
+        return {
+            'user_value': self.user_value,
+            'category': self.category.serialize(),
+            'last_search': self.last_search,
+            'search_modifier': self.search_modifier
+        }

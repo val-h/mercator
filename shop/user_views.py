@@ -4,7 +4,8 @@ from django.contrib.auth import logout
 import json
 
 from users.models import CustomUser
-from .models import Review, Order, Shipment, Product, Item
+from .models import Review, Order, Shipment, Product, Item, Category
+from users.models import Preference
 
 
 def user(request):
@@ -225,6 +226,48 @@ def user_type(request):
 
             request.user.save()
             messages = ['Account type successfully changed.']
+            status = 200
+        except ValidationError:
+            messages = ['Invalid field type.']
+            status = 400
+        except Exception:
+            messages = ['Bad request.']
+            status = 400
+
+    else:
+        messages = ['Unsupported request method.']
+        status = 405
+
+    return JsonResponse({
+        'messages': messages
+    }, status=status)
+
+
+def preferences(request):
+    if request.method == 'GET':
+        preferences = request.user.preferences.all()
+        return JsonResponse({
+            'preferences': [pref.serialize() for pref in preferences]
+        }, status=200)
+
+    elif request.method == 'PUT':
+        data = json.loads(request.body)
+        categories = [cat.name for cat in Category.objects.all()]
+        try:
+            # Attempt to update user preferences
+            for item in data:
+                if 'category' in item and item['category'] in categories:
+                    pref = Preference.objects.get(
+                        category=Category.objects.get(name=item['category']),
+                        user=request.user)
+                    if 'user_value' in item:
+                        pref.user_value = int(item['user_value'])
+
+                    # Validate and save the preference
+                    pref.full_clean()
+                    pref.save()
+
+            messages = ['Preferences successfully updated.']
             status = 200
         except ValidationError:
             messages = ['Invalid field type.']

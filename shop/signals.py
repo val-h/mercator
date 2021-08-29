@@ -25,24 +25,17 @@ object_viewed = Signal(providing_args=['instance'])
 
 @receiver(post_save, sender=Shop)
 def _on_shop_created(sender, instance, created, **kwargs):
-    # print(kwargs)
     if created:
-        # print(f'Setting up {instance}...')
         analytics = ShopAnalytics.objects.create()
         style = ShopStyle.objects.create()
         instance.analytics = analytics
         instance.style = style
         # Set the owner's account type to being a mercahnt
         instance.owner.convert_to_merchant()
-        # print('Shop set up complete!')
 
 
 @receiver(pre_delete, sender=Shop)
 def _on_shop_deleted(sender, instance, **kwargs):
-    # print(kwargs)
-    # print(f'Deleting {instance}...')
-    # print(f'Deleting existing helper Models for {instance}')
-
     # Delete shop analytics
     if instance.analytics:
         instance.analytics.delete()
@@ -53,11 +46,16 @@ def _on_shop_deleted(sender, instance, **kwargs):
     instance.owner.convert_to_customer()
 
 
-# Create a Cart object for the user automatically
+# Create a Cart and preference objects for the user automatically
 @receiver(post_save, sender=User)
 def _on_user_created(sender, instance, created, **kwargs):
     if created:
+        # Cart
         _ = Cart.objects.create(user=instance)
+
+        #  Preferences
+        for cat in Category.objects.all():
+            Preference.objects.create(category=cat, user=instance)
 
 
 @receiver(pre_delete, sender=User)
@@ -65,6 +63,10 @@ def _on_user_deleted(sender, instance, **kwargs):
     # Clear and Remove the cart
     instance.cart.clear()
     instance.cart.delete()
+
+    # Delete all the preferences for this user
+    for pref in instance.preferences.all():
+        pref.delete()
 
 
 # On each new category created, make a preference for each yser
