@@ -1,11 +1,5 @@
 // Variables
 
-// First theme
-// $color1: #f1f1f2;
-// $color2: #bcbabe;
-// $color3: #a1d6e2;
-// $color4: #1995ad;
-
 // Test theme
 $color1: #f8f9fa;
 $color2: #f6bd60;
@@ -139,26 +133,6 @@ $color4: #212529;
 
     h1 {
       text-align: center;
-    }
-
-    #personalised-container {
-      margin: 25px 5%;
-      width: 90%;
-      height: 500px;
-      background-color: $color2;
-      border: $color3;
-    }
-
-    #trending-container {
-      margin: 0 5%;
-      width: 90%;
-      height: 700px;
-      background-color: $color2;
-      border: $color3;
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
     }
   }
 
@@ -317,26 +291,6 @@ $color4: #212529;
 
     h1 {
       text-align: center;
-    }
-
-    #personalised-container {
-      margin: 25px 5%;
-      width: 90%;
-      // height: 500px;
-      background-color: $color2;
-      border: $color3;
-    }
-
-    #trending-container {
-      margin: 0 5%;
-      width: 90%;
-      // height: 500px;
-      background-color: $color2;
-      border: $color3;
-
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
     }
   }
 

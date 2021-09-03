@@ -1,6 +1,34 @@
+// Theme colors
+$color1: #f8f9fa;
+$color2: #f6bd60;
+$color3: #343a40;
+$color4: #212529;
+
+#personalised-container {
+    margin: 25px 5%;
+    width: 90%;
+    height: 500px;
+    // background-color: $color2;
+    border: $color3;
+}
+
+#trending-container {
+    margin: 0 5%;
+    width: 90%;
+    height: 700px;
+    // background-color: $color2;
+    border: $color3;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    // align-content: stretch;
+}
+
 .trending-product {
-    padding: 7px;
-    margin: 7px;
+    // padding: 7px;
+    margin: 17px;
 
     width: 220px;
     height: 220px;
@@ -11,19 +39,26 @@
 
     background-color: white;
     border: 1px solid gray;
-    border-radius: 4px;
+    border-radius: 7px;
     box-shadow: 0 0 7px 3px lightgray;
 
     .title {
-        margin: 5px 0;
+        margin: 3px 0;
         font-size: 17px;
-        color: black;
+        color: hsl(0, 0%, 25%);
     } 
 
-    .description {
+    .reviews {
         margin: 2px 0;
-        font-size: 12px;
+        font-size: 14px;
         color: gray;
+        vertical-align: middle;
+
+        img {
+            display: inline;
+            max-height: 16px;
+            max-width: 16px;
+        }
     }
 
     .price {
@@ -31,7 +66,9 @@
     }
 
     img {
-        max-width: 160px;
-        max-height: 160px;
+        width: 100%;
+        max-width: 100%;
+        max-height: 150px;
+        border-radius: 7px;
     }
 }

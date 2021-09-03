@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-# from .signals import object_viewed
 
+# from .signals import object_viewed
+from .validators import validate_review_stars
 
 User = get_user_model()
 
@@ -75,13 +76,26 @@ class Product(models.Model):
             model_id=self.id
         )
 
+    def review_data(self):
+        avg_rating = 0
+        reviews = self.reviews.all()
+        reviews_count = reviews.count()
+        if reviews:
+            for rating in reviews:
+                avg_rating += rating.stars
+            avg_rating = round(avg_rating / reviews_count, 1)
+        return avg_rating, reviews_count
+
     def serialize(self):
+        average_rating, reviews_count = self.review_data()
         return {
             'id': self.id,
             'title': self.title,
             'description': self.description,
             'price': self.price,
             'available_quantity': self.available_quantity,
+            'average_rating': average_rating,
+            'reviews_count': reviews_count,
             'category': self.category,
             'shop': self.shop.serialize(),
             'times_bought': self.times_bought,
@@ -89,11 +103,14 @@ class Product(models.Model):
         }
 
     def serialize_for_user(self):
+        average_rating, reviews_count = self.review_data()
         return {
             'id': self.id,
             'title': self.title,
             'description': self.description,
             'price': self.price,
+            'average_rating': average_rating,
+            'reviews_count': reviews_count,
             'category': self.category,
             'images': [image.serialize() for image in self.images.all()]
         }
@@ -281,7 +298,6 @@ class Shipment(models.Model):
         }
 
 
-# Fix API endpoints since the product passing was refactored with Item
 class Cart(models.Model):
     user = models.OneToOneField(
         User,
@@ -318,6 +334,8 @@ class Review(models.Model):
     )
     date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
+    stars = models.SmallIntegerField(
+        default=3, validators=[validate_review_stars])
 
     CONFIGURABLE_FIELDS = ['text']
 
@@ -329,6 +347,7 @@ class Review(models.Model):
             'id': self.id,
             'date': self.date,
             'text': self.text,
+            'stars': self.stars,
             'product_id': self.product.id,
             'user': {
                 'id': self.user.id,

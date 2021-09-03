@@ -32,6 +32,8 @@ def products(request):
                 price=data['price'],
                 available_quantity=data['quantity'])
 
+            # Add user images
+
             # Add default image if none are provided
             _ = Image.objects.create(product=new_product)
 
@@ -136,8 +138,9 @@ def product_reviews(request, product_id):
             review = Review.objects.create(
                 product=Product.objects.get(id=product_id),
                 user=request.user,
-                text=data['text']
+                text=data['text'],
             )
+            review.stars = int(data['stars'])
 
             # Validate
             review.full_clean()
