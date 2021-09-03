@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import json
 
-from .models import Product, Review
+from .models import Product, Review, Image
 
 
 def products(request):
@@ -31,6 +31,9 @@ def products(request):
                 description=data['description'],
                 price=data['price'],
                 available_quantity=data['quantity'])
+
+            # Add default image if none are provided
+            _ = Image.objects.create(product=new_product)
 
             # Validate the product
             new_product.full_clean()

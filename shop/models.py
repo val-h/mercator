@@ -84,7 +84,8 @@ class Product(models.Model):
             'available_quantity': self.available_quantity,
             'category': self.category,
             'shop': self.shop.serialize(),
-            'times_bought': self.times_bought
+            'times_bought': self.times_bought,
+            'images': [image.serialize() for image in self.images.all()]
         }
 
     def serialize_for_user(self):
@@ -93,7 +94,8 @@ class Product(models.Model):
             'title': self.title,
             'description': self.description,
             'price': self.price,
-            'category': self.category
+            'category': self.category,
+            'images': [image.serialize() for image in self.images.all()]
         }
 
 
@@ -109,6 +111,11 @@ class Image(models.Model):
 
     def __str__(self):
         return f'{self.product.title}\'s image'
+
+    def serialize(self):
+        return {
+            'url': self.image.url
+        }
 
 
 class Item(models.Model):
@@ -278,7 +285,7 @@ class Shipment(models.Model):
 class Cart(models.Model):
     user = models.OneToOneField(
         User,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name='cart'
     )
 
@@ -301,12 +308,12 @@ class Cart(models.Model):
 class Review(models.Model):
     product = models.ForeignKey(
         Product,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name='reviews'
     )
     user = models.ForeignKey(
         User,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name='reviews'
     )
     date = models.DateTimeField(auto_now_add=True)

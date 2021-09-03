@@ -2,6 +2,14 @@
 
 {% block title %}Mercator{% endblock %}
 
+{% load static %}
+{% block js_addon %}
+    <script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
+{% block css_addon %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
 {% block content %}
 <div id="main-container">
     <h1>Home!</h1>
@@ -13,7 +21,6 @@
     {% endif %}
 
     <div id="trending-container">
-        Trending products container
     </div>
 
 </div>

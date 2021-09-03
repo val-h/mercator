@@ -152,9 +152,13 @@ $color4: #212529;
     #trending-container {
       margin: 0 5%;
       width: 90%;
-      height: 500px;
+      height: 700px;
       background-color: $color2;
       border: $color3;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
     }
   }
 
@@ -329,6 +333,10 @@ $color4: #212529;
       // height: 500px;
       background-color: $color2;
       border: $color3;
+
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
     }
   }
 

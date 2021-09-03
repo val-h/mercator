@@ -113,9 +113,12 @@
   main #trending-container {
     margin: 0 5%;
     width: 90%;
-    height: 500px;
+    height: 700px;
     background-color: #f6bd60;
     border: #343a40;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   footer {
@@ -269,6 +272,9 @@
     width: 90%;
     background-color: #f6bd60;
     border: #343a40;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   footer {
