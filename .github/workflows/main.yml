@@ -60,8 +60,8 @@ jobs:
       - name: Run the Docker container
         run: docker-compose up -d
 
-      - name: Check running containers
-        run: docker ps -a
+      - name: Run collectstatic
+        run: docker exec web python manage.py collectstatic
       
       - name: Run tests
         run: docker exec web python manage.py test
